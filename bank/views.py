@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import Bank
+from .forms import BankForm
 
 def home(request):
     return render(request, 'origin/home.html', {})
@@ -17,3 +19,15 @@ def statement_of_accounts(request):
 
 def general_view(request):
     return render(request,'bank/general_view.html', {})
+
+def createBank(request):
+    form = BankForm()
+    if request.method == 'POST':
+        #print('Printing POST:', request.POST)
+        form = BankForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+    context = {'form': form}
+    return render(request, 'bank/bank_form.html', context)
