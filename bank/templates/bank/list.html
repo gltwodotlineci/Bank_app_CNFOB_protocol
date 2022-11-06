@@ -1,6 +1,11 @@
 <!DOCTYPE html>
     {% extends 'origin/base.html' %}
     {% block content %}
-        <h3> here are the list of banks! </h3>
+        <h3> here are the list of banks! </h3><br/><br/>
+
+        <button type="submit"><a href="{% url 'new_bank'%}"> New Bank </a></button>
+        <br/><br/><br/><br/><br/><br/>
+        <button type="submit"><a href="{% url 'new_account_number'%}"> New Account Number </a></button>
+
     {% endblock %}
 </html>

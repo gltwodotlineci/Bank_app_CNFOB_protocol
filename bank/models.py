@@ -13,7 +13,6 @@ class Bank(models.Model):
         return self.name_bank
 
 
-
 class AccountNumber(models.Model):
     account_number = models.CharField(max_length=15)
     rib_key = models.CharField(max_length=10)

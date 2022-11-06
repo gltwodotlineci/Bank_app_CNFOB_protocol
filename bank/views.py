@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Bank
 from .forms import BankForm
+from .forms import AccountForm
 
 def home(request):
     return render(request, 'origin/home.html', {})
@@ -31,3 +32,15 @@ def createBank(request):
 
     context = {'form': form}
     return render(request, 'bank/bank_form.html', context)
+
+def createAccount(request):
+    form = AccountForm()
+    if request.method == 'POST':
+        #print('Printing POST:', request.POST)
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+    context = {'form': form}
+    return render(request, 'bank/account_form.html', context)
