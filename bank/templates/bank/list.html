@@ -20,7 +20,7 @@
                     <tr>
                         <th>{{ bank.name_bank }} &nbsp&nbsp </th>
                         <th>{{ bank.bank_code }} &nbsp&nbsp</th>
-                        <th>  {{ bank.bic }} &nbsp&nbsp </th>
+                        <th> {{ bank.bic }} &nbsp&nbsp </th>
                         <th>{{ bank.bank_adresse }}&nbsp&nbsp</th>
                         <th>{{ bank.country_bank_cod }}&nbsp&nbsp</th>
                         <th>{{ bank.country_key }}&nbsp&nbsp</th>
@@ -31,14 +31,15 @@
         <br/><br/><br/><br/><br/><br/>
         <button type="submit"><a href="{% url 'new_account_number'%}"> New Account Number </a></button>
         <h3> The Accounts</h3>
-        <ul>
-            {% for account in accounts %}
-                <Table>
-                    <tr>
-                        <th>{{ account.account_number }} &nbsp&nbsp </th>
-                        <th>{{ account.rib }} &nbsp&nbsp</th>
-                </Table>
-            {% endfor %}
-        </ul>
+
+          {% for account in accounts %}
+            <Table>
+                <th>{{ account.bank.name_bank }} &nbsp&nbsp </th>
+                <th>{{ account.account_number }} &nbsp&nbsp </th>
+                <th>{{ account.rib }} &nbsp&nbsp</th>
+                <th>{{ account.bank.country_bank_code}}{{ account.bank.country_key}}{{ account.bank.bank_code}}{{ account.account_number}}{{ account.rib_key}} &nbsp&nbsp </th>
+            </Table>
+          {% endfor %}
+
     {% endblock %}
 </html>
