@@ -3,12 +3,16 @@ from .models import Bank
 from .models import AccountNumber
 from .forms import BankForm
 from .forms import AccountForm
+from django.shortcuts import render
+from .models import Bank, AccountNumber
 
 def home(request):
     return render(request, 'origin/home.html', {})
 
 def bank(request):
-    return render(request, 'bank/list.html', {})
+    banks = Bank.objects.order_by('name_bank')
+    accounts = AccountNumber.objects.order_by('account_number')
+    return render(request, 'bank/list.html', {'banks':banks, 'accounts':accounts})
 
 def importdata(request):
     return render(request, 'import/importdata.html', {})

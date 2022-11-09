@@ -1,11 +1,44 @@
 <!DOCTYPE html>
+<style>
+    table, td {
+      border:1px solid black;
+    }
+    th {
+        border: :1px solid blue;
+    }
+</style>
     {% extends 'origin/base.html' %}
     {% block content %}
         <h3> here are the list of banks! </h3><br/><br/>
 
         <button type="submit"><a href="{% url 'new_bank'%}"> New Bank </a></button>
+        <br/><br/>
+        <h4> The Banks</h4>
+        <ul>
+            {% for bank in banks %}
+                <Table>
+                    <tr>
+                        <th>{{ bank.name_bank }} &nbsp&nbsp </th>
+                        <th>{{ bank.bank_code }} &nbsp&nbsp</th>
+                        <th>  {{ bank.bic }} &nbsp&nbsp </th>
+                        <th>{{ bank.bank_adresse }}&nbsp&nbsp</th>
+                        <th>{{ bank.country_bank_cod }}&nbsp&nbsp</th>
+                        <th>{{ bank.country_key }}&nbsp&nbsp</th>
+                    </tr>
+                </Table>
+            {% endfor %}
+        </ul>
         <br/><br/><br/><br/><br/><br/>
         <button type="submit"><a href="{% url 'new_account_number'%}"> New Account Number </a></button>
-
+        <h3> The Accounts</h3>
+        <ul>
+            {% for account in accounts %}
+                <Table>
+                    <tr>
+                        <th>{{ account.account_number }} &nbsp&nbsp </th>
+                        <th>{{ account.rib }} &nbsp&nbsp</th>
+                </Table>
+            {% endfor %}
+        </ul>
     {% endblock %}
 </html>
