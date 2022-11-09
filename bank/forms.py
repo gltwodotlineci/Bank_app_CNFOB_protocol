@@ -10,4 +10,5 @@ class BankForm(ModelForm):
 class AccountForm(ModelForm):
     class Meta:
         model = AccountNumber
-        fields = '__all__'
+        fields = ['account_number','rib_key','bank']
+        #fields = '__all__'
