@@ -34,10 +34,10 @@
 
           {% for account in accounts %}
             <Table>
-                <th>{{ account.bank.name_bank }} &nbsp&nbsp </th>
                 <th>{{ account.account_number }} &nbsp&nbsp </th>
                 <th>{{ account.rib }} &nbsp&nbsp</th>
-                <th>{{ account.bank.country_bank_code}}{{ account.bank.country_key}}{{ account.bank.bank_code}}{{ account.account_number}}{{ account.rib_key}} &nbsp&nbsp </th>
+                <th>{{ account.bank.country_bank_code}}{{account.bank.country_key}}{{ account.bank.bank_code}}{{ account.account_number}}{{ account.rib_key}} &nbsp&nbsp </th>
+                <th>{{ account.bank.name_bank }} &nbsp&nbsp </th>
             </Table>
           {% endfor %}
 
