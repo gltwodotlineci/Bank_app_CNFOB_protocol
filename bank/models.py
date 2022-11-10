@@ -24,6 +24,15 @@ class AccountNumber(models.Model):
         return self.account_number
 
 
+class SelectDocument(models.Model):
+    name_document = models.CharField(max_length=15)
+    date_selected = models.DateField(max_length=10)
+
+
+class ImportingDocument(models.Model):
+    name_selected = models.CharField(max_length=15)
+    date_imported = models.CharField(max_length=10)
+
 '''
     @property
     def iban(self):

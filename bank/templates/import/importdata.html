@@ -1,6 +1,85 @@
 <!DOCTYPE html>
 {% extends 'origin/base.html' %}
 {% block content %}
-    <h3> Importing bank data</h3>
+    <h3> Importing bank data</h3><br/><br/>
+
+<div class="row">
+  <div class="col-md-5">
+      <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Document Date</th>
+          <th scope="col">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+        </tr>
+          <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+        </tr>
+          <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-2">
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="button">Choos Selected Document</button>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Document Date</th>
+          <th scope="col">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+        </tr>
+          <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+        </tr>
+          <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-5">
+      <button type="button" class="btn btn-success">Select Document</button>
+  </div>
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-5">
+      <button type="button" class="btn btn-success">Import Data</button>
+  </div>
+</div>
+
+
+
 {% endblock %}
 </html>

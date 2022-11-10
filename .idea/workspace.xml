@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84c5dea9-2aaf-4d06-9881-d5d54748d614" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bank/templates/bank/list.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/bank/list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/bank_CFNOB_norm.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bank_CFNOB_norm.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bank/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bank/templates/import/importdata.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/import/importdata.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +80,7 @@
       <option name="presentableId" value="Default" />
       <updated>1667677740251</updated>
       <workItem from="1667677741465" duration="31616000" />
-      <workItem from="1668010697279" duration="6003000" />
+      <workItem from="1668010697279" duration="8989000" />
     </task>
     <servers />
   </component>
