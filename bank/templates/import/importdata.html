@@ -9,27 +9,18 @@
       <thead class="thead-dark">
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Document Date</th>
           <th scope="col">Name</th>
+          <th scope="col">Date</th>
         </tr>
       </thead>
       <tbody>
+          {% for doc in selcteddocuments %}
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ doc.selected_document}}</td>
+            <td>{{ doc.date_selected}}</td>
+          {% endfor %}<br/>
         </tr>
-          <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-        </tr>
-          <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-        </tr>
-
       </tbody>
     </table>
   </div>
@@ -39,30 +30,22 @@
     </div>
   </div>
   <div class="col-md-5">
-    <table class="table">
+      <table class="table">
       <thead class="thead-dark">
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Document Date</th>
           <th scope="col">Name</th>
+          <th scope="col">Date</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-        </tr>
+          {% for doc in importdocuments %}
           <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-        </tr>
-          <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-        </tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ doc.name_document}}</td>
+            <td>{{ doc.date_imported}}</td>
+          </tr>
+          {% endfor %}<br/>
       </tbody>
     </table>
   </div>
@@ -78,8 +61,5 @@
       <button type="button" class="btn btn-success">Import Data</button>
   </div>
 </div>
-
-
-
 {% endblock %}
 </html>

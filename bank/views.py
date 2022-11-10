@@ -5,6 +5,7 @@ from .forms import BankForm
 from .forms import AccountForm
 from django.shortcuts import render
 from .models import Bank, AccountNumber
+from .models import SelectDocument, ImportingDocument
 
 def home(request):
     return render(request, 'origin/home.html', {})
@@ -14,12 +15,14 @@ def bank(request):
     accounts = AccountNumber.objects.order_by('account_number')
     return render(request, 'bank/list.html', {'banks':banks, 'accounts':accounts})
 
+def importdocument(request):
+    selcteddocuments = SelectDocument.objects.order_by('selected_document')
+    importdocuments = ImportingDocument.objects.order_by('name_document')
+    return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
+'''
 def importdata(request):
-    return render(request, 'import/importdata.html', {})
-
-def imported_data(request):
-    return render(request,'import/imported_data.html', {})
-
+    return render(request,'import/importdata.html', {})
+'''
 def statement_of_accounts(request):
     return render(request, 'bank/account.html', {})
 
@@ -49,6 +52,7 @@ def createAccount(request):
 
     context = {'form': form}
     return render(request, 'bank/account_form.html', context)
+
 '''
     banks = Bank.objects.all()
     accounts = AccountNumber.objects.all()
