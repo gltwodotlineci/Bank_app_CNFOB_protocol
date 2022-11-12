@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Bank
-from .models import AccountNumber
-from .forms import BankForm
-from .forms import AccountForm
+from .models import Bank, AccountNumber, SelectDocument, ImportingDocument, FileUpload
+from .forms import BankForm, AccountForm
 from django.shortcuts import render
-from .models import Bank, AccountNumber
-from .models import SelectDocument, ImportingDocument
+from datetime import datetime
+
+today = datetime.today()
 
 def home(request):
     return render(request, 'origin/home.html', {})
@@ -16,9 +15,19 @@ def bank(request):
     return render(request, 'bank/list.html', {'banks':banks, 'accounts':accounts})
 
 def importdocument(request):
-    selcteddocuments = SelectDocument.objects.order_by('selected_document')
+    selcteddocuments = FileUpload.objects.order_by('file')
     importdocuments = ImportingDocument.objects.order_by('name_document')
+    if request.method == "POST":
+        file2 = request.FILES["file"]
+        document = FileUpload.objects.create(file=file2, created_at=today)#, created_at=Date.today)
+        document.save()
     return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
+
+def select_name_doc(request):
+    form = UploadFile(request.POST, request.FILES)
+    file = request.FILES['file']
+    return HttpResponse("str(file)")
+
 '''
 def importdata(request):
     return render(request,'import/importdata.html', {})
@@ -72,6 +81,10 @@ def createAccount(request):
                 'iban':iban_nb
                }
     return render(request, 'bank/account_form.html', context)
+
+class UploadFileForm(forms.Form):
+    file = forms.FielField()
+
 
 '''
 

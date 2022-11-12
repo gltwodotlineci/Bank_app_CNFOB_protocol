@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django import forms
 from .models import Bank
 from .models import AccountNumber
 
@@ -12,3 +13,8 @@ class AccountForm(ModelForm):
         model = AccountNumber
         fields = ['account_number','rib_key','bank']
         #fields = '__all__'
+
+
+class UploadFile(forms.Form):
+    pass #file = forms.FileField()
+

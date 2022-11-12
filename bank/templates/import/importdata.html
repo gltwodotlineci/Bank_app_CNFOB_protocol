@@ -3,7 +3,7 @@
 {% block content %}
     <h3> Importing bank data</h3><br/><br/>
 
-<div class="row">
+<div class="row" style="margin: 5px;">
   <div class="col-md-5">
       <table class="table">
       <thead class="thead-dark">
@@ -17,8 +17,8 @@
           {% for doc in selcteddocuments %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ doc.selected_document}}</td>
-            <td>{{ doc.date_selected}}</td>
+             <td>{{ doc.file}}</td>
+            <td>{{ doc.created_at}}</td>
           {% endfor %}<br/>
         </tr>
       </tbody>
@@ -51,9 +51,13 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin:4px;">
   <div class="col-md-5">
-      <button type="button" class="btn btn-success">Select Document</button>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file", name="file" ></input>
+        <input type="submit" name="Import">
+    </form>
   </div>
   <div class="col-md-2">
   </div>

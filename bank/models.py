@@ -24,6 +24,11 @@ class AccountNumber(models.Model):
         return self.account_number
 
 
+class FileUpload(models.Model):
+    file = models.FileField()
+    created_at = models.DateField()
+
+
 class SelectDocument(models.Model):
     selected_document = models.CharField(max_length=15)
     date_selected = models.DateField(max_length=10)
@@ -32,11 +37,3 @@ class SelectDocument(models.Model):
 class ImportingDocument(models.Model):
     name_document = models.CharField(max_length=15)
     date_imported = models.CharField(max_length=10)
-
-'''
-    @property
-    def iban(self):
-        iban_number = self.bank.country_bank_code + self.bank.country_key + self.bank.bank_code + \
-               self.bank.branch_code + self.account_number + self.rib_key
-        return iban_number
-'''
