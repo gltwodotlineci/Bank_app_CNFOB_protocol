@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 {% extends 'origin/base.html' %}
 {% block content %}
-    <h3> Importing bank data</h3><br/><br/>
-
+<h3> Importing bank data</h3><br/><br/>
 <div class="row" style="margin: 5px;">
   <div class="col-md-5">
-      <table class="table">
+      <table id="tableselect" class="table">
       <thead class="thead-dark">
         <tr>
           <th scope="col">#</th>
@@ -65,5 +64,14 @@
       <button type="button" class="btn btn-success">Import Data</button>
   </div>
 </div>
+<script>
+    $(document).ready(function () {
+    $('#tableselect').DataTable({
+        stateSave: true,
+        select: true,
+        select:{items:'row'}
+        });
+    });
+</script>
 {% endblock %}
 </html>

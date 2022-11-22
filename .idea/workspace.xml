@@ -4,12 +4,11 @@
     <list default="true" id="84c5dea9-2aaf-4d06-9881-d5d54748d614" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bank/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bank/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bank/templates/import/importdata.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/import/importdata.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bank/templates/origin/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/origin/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bank/templates/origin/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/origin/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bank/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank_CFNOB_norm/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank_CFNOB_norm/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank_CFNOB_norm/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank_CFNOB_norm/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,6 +22,17 @@
         <option value="Python Script" />
         <option value="HTML File" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -85,7 +95,10 @@
       <option name="presentableId" value="Default" />
       <updated>1667677740251</updated>
       <workItem from="1667677741465" duration="31616000" />
-      <workItem from="1668010697279" duration="28747000" />
+      <workItem from="1668010697279" duration="45273000" />
+      <workItem from="1668783274390" duration="1224000" />
+      <workItem from="1669015209005" duration="686000" />
+      <workItem from="1669133558083" duration="6503000" />
     </task>
     <servers />
   </component>

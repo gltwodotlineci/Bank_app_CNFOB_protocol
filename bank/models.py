@@ -17,23 +17,35 @@ class AccountNumber(models.Model):
     account_number = models.CharField(max_length=15)
     rib_key = models.CharField(max_length=10)
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
-    #branch_code = Bank.objects.get(id=bank)
-    #iban = branch_code.branch_code + account_number
 
     def __str__(self):
         return self.account_number
+    #branch_code = Bank.objects.get(id=bank)
+    #iban = branch_code.branch_code + account_number
 
+
+class ImportingDocument(models.Model):
+    name_document = models.CharField(max_length=15)
+    date_imported = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name_document
 
 class FileUpload(models.Model):
     file = models.FileField()
     created_at = models.DateField()
 
 
-class SelectDocument(models.Model):
-    selected_document = models.CharField(max_length=15)
-    date_selected = models.DateField(max_length=10)
+class OldAccount(models.Model):
+    enrolling_nb = models.CharField(max_length=3)
+    bank_code = models.CharField(max_length=7)
+    account_number = models.CharField(max_length=15)
+    date = models.CharField(max_length=10)
+    amount_credit = models.CharField(max_length=15)
+    amount_debit = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.enrolling_nb
 
 
-class ImportingDocument(models.Model):
-    name_document = models.CharField(max_length=15)
-    date_imported = models.CharField(max_length=10)
+

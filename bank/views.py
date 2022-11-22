@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bank, AccountNumber, SelectDocument, ImportingDocument, FileUpload
+from .models import Bank, AccountNumber, ImportingDocument, FileUpload, OldAccount
 from .forms import BankForm, AccountForm
 from django.shortcuts import render
 from datetime import datetime
@@ -14,14 +14,39 @@ def bank(request):
     accounts = AccountNumber.objects.order_by('account_number')
     return render(request, 'bank/list.html', {'banks':banks, 'accounts':accounts})
 
+
 def importdocument(request):
-    selcteddocuments = FileUpload.objects.order_by('file')
-    importdocuments = ImportingDocument.objects.order_by('name_document')
+    selcteddocuments = FileUpload.objects.order_by('-id')
+    importdocuments = ImportingDocument.objects.order_by('-id')
     if request.method == "POST":
         file2 = request.FILES["file"]
+        Lines = file2.readlines()
+        for line in Lines:
+            print(line)
         document = FileUpload.objects.create(file=file2, created_at=today)#, created_at=Date.today)
         document.save()
     return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
+
+'''
+        for line in file2.readlines():
+            enrolling = line[0:2]
+            code_bank = line[2:7]
+            old_account = OldAccount.objects.create(enrolling_nb=enrolling,
+                                                    bank_code=code_bank,
+                                                    account_number="abc",
+                                                    date="efg",
+                                                    amount_credit="100",
+                                                    amount_debit="200"
+                                                    )
+            old_account.save
+    return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
+'''
+
+def create_class_doc(request):
+    #        print(file2.readlines(10))
+    pass
+
+
 
 def select_name_doc(request):
     form = UploadFile(request.POST, request.FILES)
