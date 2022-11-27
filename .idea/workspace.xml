@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="84c5dea9-2aaf-4d06-9881-d5d54748d614" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bank/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank/templates/import/importdata.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/import/importdata.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank/templates/origin/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/origin/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank/templates/origin/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/bank/templates/origin/navbar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bank/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bank/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
@@ -19,8 +15,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -98,7 +94,8 @@
       <workItem from="1668010697279" duration="45273000" />
       <workItem from="1668783274390" duration="1224000" />
       <workItem from="1669015209005" duration="686000" />
-      <workItem from="1669133558083" duration="6503000" />
+      <workItem from="1669133558083" duration="13092000" />
+      <workItem from="1669565195555" duration="1637000" />
     </task>
     <servers />
   </component>

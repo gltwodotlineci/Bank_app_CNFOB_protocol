@@ -16,15 +16,25 @@ def bank(request):
 
 
 def importdocument(request):
-    selcteddocuments = FileUpload.objects.order_by('-id')
-    importdocuments = ImportingDocument.objects.order_by('-id')
     if request.method == "POST":
         file2 = request.FILES["file"]
         Lines = file2.readlines()
         for line in Lines:
-            print(line)
+            enrolling = line[0:2]
+            code_bank = line[3:7]
+            account_nb = line[8:21]
+            old_account = OldAccount.objects.create(enrolling_nb=enrolling,
+                                                    bank_code=code_bank,
+                                                    account_number=account_nb,
+                                                    date="efg",
+                                                    amount_credit="100",
+                                                    amount_debit="200"
+                                                    )
+            old_account.save
         document = FileUpload.objects.create(file=file2, created_at=today)#, created_at=Date.today)
         document.save()
+    selcteddocuments = FileUpload.objects.order_by('-id')
+    importdocuments = ImportingDocument.objects.order_by('-id')
     return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
 
 '''
