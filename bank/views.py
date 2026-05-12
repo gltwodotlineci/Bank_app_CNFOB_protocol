@@ -1,5 +1,6 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import Bank, AccountNumber, ImportingDocument, FileUpload, OldAccount
+from .models import Bank, AccountNumber, BankStatementFile
 from .forms import BankForm, AccountForm
 from django.shortcuts import render
 from datetime import datetime
@@ -19,23 +20,8 @@ def importdocument(request):
     if request.method == "POST":
         file2 = request.FILES["file"]
         Lines = file2.readlines()
-        for line in Lines:
-            enrolling = line[0:2]
-            code_bank = line[3:7]
-            account_nb = line[8:21]
-            old_account = OldAccount.objects.create(enrolling_nb=enrolling,
-                                                    bank_code=code_bank,
-                                                    account_number=account_nb,
-                                                    date="efg",
-                                                    amount_credit="100",
-                                                    amount_debit="200"
-                                                    )
-            old_account.save
-        document = FileUpload.objects.create(file=file2, created_at=today)#, created_at=Date.today)
-        document.save()
-    selcteddocuments = FileUpload.objects.order_by('-id')
-    importdocuments = ImportingDocument.objects.order_by('-id')
-    return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
+
+    return render(request, 'import/importdata.html')
 
 '''
         for line in file2.readlines():
@@ -59,7 +45,7 @@ def create_class_doc(request):
 
 
 def select_name_doc(request):
-    form = UploadFile(request.POST, request.FILES)
+    form = BankStatementFile(request.POST, request.FILES)
     file = request.FILES['file']
     return HttpResponse("str(file)")
 
