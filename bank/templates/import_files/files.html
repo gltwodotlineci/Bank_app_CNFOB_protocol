@@ -1,0 +1,154 @@
+{% extends 'origin/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row g-3 align-items-start flex-nowrap">
+
+        <!-- LEFT -->
+        <div class="col-md-5">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header text-center">
+                    <h4>Selected Files</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form class="row g-2 align-items-center"
+                          hx-post="/chargefile/"
+                          hx-encoding="multipart/form-data"                          
+                          hx-swap="none">
+
+                        <div class="col-10">
+                            <input type="file"
+                                   name="filename"
+                                   class="form-control"
+                                   multiple>
+                        </div>
+
+                        <div class="col">
+                            <button type="submit"
+                                    style="font-size: 1.7rem;">
+                                ⬇️
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <ul class="list-group mb-4 mt-3">
+                        {% for file in files %}
+                            {% if file.archived == False %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p >{{ file.name }}</p>
+                                    </div>
+                                    <button class="btn btn-dark btn-sm"
+                                            onclick="transferFile('{{ file.id }}', true)">
+                                        Process file
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        x
+                                    </button>                                    
+                                </li>
+
+                            {% endif %}
+                        {% empty %}
+                            <li class="list-group-item text-muted">
+                                No selected files
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- MIDDLE -->
+        <div class="col-md-1 d-flex justify-content-center align-items-center">
+            <button class="btn btn-dark btn-lg">→</button>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-md-5">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header text-center">
+                    <h4>Archived Files</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <ul class="list-group mb-4">
+
+                        {% for file in files %}
+                            {% if file.archived == True %}
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <div>
+                                        <input class="form-check-input me-2"
+                                               type="checkbox">
+                                        {{ file.name }}
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+
+                                        <button class="btn btn-dark btn-sm"
+                                                onclick="transferFile('{{ file.id }}','C')">
+                                            Remove
+                                        </button>
+                                    </div>
+
+                                </li>
+
+                            {% endif %}
+                        {% empty %}
+                            <li class="list-group-item text-muted">
+                                No validated files
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+async function transferFile(fileId, archived) {
+
+    await fetch(`/api/bankfiles/${fileId}/`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify({ archived: archived })
+        
+    });
+    console.log("File archived", archived);
+    // FULL PAGE REFRESH (key change)
+    window.location.reload();
+}
+
+function getCSRFToken() {
+    let cookieValue = null;
+    document.cookie.split(';').forEach(cookie => {
+        cookie = cookie.trim();
+        if (cookie.startsWith("csrftoken=")) {
+            cookieValue = cookie.substring("csrftoken=".length);
+        }
+    });
+    return cookieValue;
+}
+</script>
+
+{% endblock %}

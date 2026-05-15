@@ -3,6 +3,7 @@ from uuid import uuid4
 from bank_CFNOB_norm import settings
 from users.models import CustomUser
 
+
 class Company(models.Model):
     """
     Company Model for the
@@ -52,16 +53,20 @@ class Bank(models.Model):
                                 on_delete=models.SET_NULL,
                                 null=True,
                                 related_name='baks_company')
-    name_bank = models.CharField(max_length=60)
-    bank_code = models.CharField(max_length=20)
+    name = models.CharField(max_length=60)
+    code = models.CharField(max_length=20)
     branch_code = models.CharField(max_length=8)
+    rib_key = models.CharField(max_length=4)
     bic = models.CharField(max_length=12)
-    bank_adresse = models.CharField(max_length=80, blank=True)
-    country_bank_code = models.CharField(max_length=5)
+    holder_name = models.CharField(max_length=80)
+    adresse = models.CharField(max_length=80, blank=True)
+    zip_code = models.CharField(max_length=5)
     country_key = models.CharField(max_length=4)
-
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(max_length=254, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return self.name_bank
+        return self.name
 
 
 class AccountNumber(models.Model):
@@ -82,22 +87,28 @@ class AccountNumber(models.Model):
         return self.account_number
 
 
+class FileState(models.TextChoices):
+    SELECTED = "S", "Selected"
+    PRECHARGED = "P", "Prechared"
+    CHARGED = "C", "Charged"    
+
 
 class BankStatementFile(models.Model):
     """
     Imported file model for the bank data
     Attributes:
         id: Unique id for the imported file
-        file_name: Name of the imported file
+        name: Name of the imported file
+        archived: State of the imported file
         date_imported: Date of the imported file
+        date_generated: Date of the generated file
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)    
-    name = models.CharField(max_length=15)
+    name = models.FileField(upload_to='bank_statements/')
+    archived = models.BooleanField(default=False)
     date_imported = models.DateField(auto_now_add=True)
     date_generated = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name_document
+    date_updated = models.DateField(auto_now=True)
 
 
 class Operation(models.Model):

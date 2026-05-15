@@ -1,18 +1,25 @@
 from rest_framework import serializers
-from .models import OldAccount, Operation, NewBalanceAccount
+from .models import Operation, NewBalanceAccount, BankStatementFile
 
-class OldAccountSerializer(serializers.Serializer):
+
+class BankFileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OldAccount
-        fields = __all__
+        model = BankStatementFile
+        fields = '__all__'
+        read_only_fields = ('id', 'name', 'date_generated', 'date_imported', 'date_updated')
+
+
+class BankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankStatementFile
+        fields = '__all__'
+        read_only_fields = ('id',)
 
 class OperationsSerializer(serializers.Serializer):
     class Meta:
         model = Operation
-        fields = __all__
 
 
 class NewBalanceAccountSerializer(serializers.Serializer):
     class Meta:
         model = NewBalanceAccount
-        fields = __all__

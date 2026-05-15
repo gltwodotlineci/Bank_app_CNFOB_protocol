@@ -20,5 +20,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('bank.urls')),
+    path('', include('users.urls')),
     path('admin/', admin.site.urls),
 ]+static(settings.TEXT_URL, document_root=settings.TEXT_ROOT )

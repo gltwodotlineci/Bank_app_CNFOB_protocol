@@ -1,0 +1,76 @@
+{% extends 'origin/base.html' %}
+
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+
+    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
+
+        <div class="flex items-center gap-3 mb-8">
+
+            <div class="relative">
+                <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    Banks
+                    <span>▼</span>
+                </button>
+            </div>
+
+            <button id="btnBank"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                New Bank
+            </button>
+
+            <button id="btnAccount"
+                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                New Account
+            </button>
+
+        </div>
+
+        <div id="bankForm" class="hidden">
+            {% include 'bank/partials/bank_form.html' %}
+        </div>
+
+        <div id="accountForm" class="hidden">
+            {% include 'bank/partials/account_form.html' %}
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btnBank = document.getElementById("btnBank");
+    const btnAccount = document.getElementById("btnAccount");
+
+    const bankForm = document.getElementById("bankForm");
+    const accountForm = document.getElementById("accountForm");
+
+    function hideAll() {
+        bankForm.classList.add("hidden");
+        accountForm.classList.add("hidden");
+    }
+
+    btnBank.addEventListener("click", () => {
+        hideAll();
+        bankForm.classList.remove("hidden");
+    });
+
+    btnAccount.addEventListener("click", () => {
+        hideAll();
+        accountForm.classList.remove("hidden");
+    });
+
+});
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'origin/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 d-flex justify-content-center">
+
+    <div class="text-center" style="max-width: 700px; width: 100%;">
+
+        <h1 class="display-4 mb-4">
+            Welcome
+        </h1>
+
+        <p class="lead mb-5">
+            Choose one of the available sections below.
+        </p>
+
+        <div class="d-grid gap-4">
+
+            <a href="{% url 'import' %}" class="btn btn-primary btn-lg py-3">
+                Files
+            </a>
+
+            <a href="{% url 'bank' %}" class="btn btn-success btn-lg py-3">
+                Bank
+            </a>
+
+            <a href="#" class="btn btn-dark btn-lg py-3">
+                Detail Account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

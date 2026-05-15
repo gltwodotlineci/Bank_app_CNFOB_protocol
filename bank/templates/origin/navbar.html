@@ -1,48 +1,54 @@
-<!DOCTYPE html>
+<body class="bg-gray-100">
 
-<body>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+    <!-- NAVBAR -->
+    <nav class="bg-gray-900 text-white shadow-lg">
 
-		<div class="container-fluid">
-		  <a class="navbar-brand" href="#">Navbar</a>
-		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		  </button>
+        <div class="max-w-7xl mx-auto px-4 py-3">
 
-		  <div class=" collapse navbar-collapse" id="navbarNavDropdown">
-			<ul class="navbar-nav ms-auto ">
-			  <li class="nav-item">
-				<a class="nav-link mx-2 active" aria-current="page" href="{% url 'home' %}">Home</a>
-			  </li>
-			  <li class="nav-item">
-				<a class="nav-link mx-2" href="{% url  "bank" %}">Bank</a>
-			  </li>
-			  <li class="nav-item">
-				<a class="nav-link mx-2" href="{% url  "import" %}">Import Documents</a>
-			  </li>
-			  <li class="nav-item">
-				<a class="nav-link mx-2" href="{% url  "statement of accounts" %}">Statemen Accounts</a>
-			  </li>
-			  <li class="nav-item">
-				<a class="nav-link mx-2" href="{% url  "general view" %}">General View</a>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-				  Other
-				</a>
-				<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <li><a class="dropdown-item" href="#">Blog</a></li>
-				  <li><a class="dropdown-item" href="#">About Us</a></li>
-				  <li><a class="dropdown-item" href="#">Contact us</a></li>
-				</ul>
-			  </li>
-			</ul>
-		  </div>
-		</div>
-	</nav>
+            <div class="flex items-center justify-between">
+
+                <!-- LOGO -->
+                <div class="text-xl font-bold tracking-wide">
+                    Banking System
+                </div>
+
+                <!-- MAIN MENU -->
+                <div class="flex items-center space-x-6">
+
+                    <a href="{% url 'welcome' %}"
+                       class="hover:text-blue-400 transition">
+                        Home
+                    </a>
+
+                    <a href="{% url 'import' %}"
+                       class="hover:text-blue-400 transition">
+                        Files
+                    </a>
+
+                    <a href="{% url 'bank' %}"
+                       class="hover:text-blue-400 transition">
+                        Bank
+                    </a>
+
+                    <a href="{% url 'statement of accounts' %}"
+                       class="hover:text-blue-400 transition">
+                        Detail Accounts
+                    </a>
+
+                    <a style="cursor: pointer;"
+                       class="hover:text-red-400 transition"
+                       hx-post="{% url 'logout' %}"
+                       hx-target="body"
+                       hx-swap="none">
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
 </body>
-</html>
-
-
-
-

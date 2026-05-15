@@ -1,31 +1,87 @@
+from django.http import HttpResponse
 from django.shortcuts import render
-from rest_framework import render
+from rest_framework import renderers, viewsets
 from users.models import CustomUser
-from rest_framework.views import ApiView
+from rest_framework.views import APIView, Response
+from django.contrib.auth import authenticate, login, logout
+
+from users.serializers import UserSerializer, LoginSerializer
 
 
-class RegisterUserView(ApiView):
+def authent_usr(request):
+    return render(request, 'users/login.html', {})
+
+def signup(request):
+    return render(request, 'users/signup.html', {})
+
+def new_user(request):
+    return render(request, 'users/new_user.html', {})
+
+
+class RegisterUserView(APIView):
     """
     Create new user
     Methods: post
     """
     def post(self, request):
-        pass
+        data = request.data
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = CustomUser.objects.create_user(
+                username=data.get('username'),
+                email=data.get('email'),
+                password=data.get('password')
+            )
+            user.save()
+            login(request, user)
+
+            response = HttpResponse()
+            response["HX-Redirect"] = "/new_user/"
+            return response
+
+        msg = "The username or the email already exists"
+        return Response({'message': f'Error creating user {msg}'})
 
 
-class LoginUserView(ApiView):
+class LoginUserView(APIView):
     """
     Login user:
     Methods: post
     """
     def post(self, request):
-        pass
+        serializer = LoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer_valid = serializer.validated_data
+            username = serializer_valid.get('username')
+            password = serializer_valid.get('password')
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+
+                response = HttpResponse()
+                response["HX-Redirect"] = "/welcome/"
+                return response
+
+            return Response({'message': 'Invalid username or password'})
 
 
-class LogoutUserView(ApiView):
+class LogoutUserView(APIView):
     """
     Log out user:
     Methods: post
     """
     def post(self, request):
-        pass
+        logout(request)
+
+        response = HttpResponse()
+        response["HX-Redirect"] = "/"
+        return response
+
+
+class UserViewset(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+
+    lookup_field = 'pk'
+    http_method_names = ['get', 'patch', 'delete', 'put']

@@ -1,0 +1,140 @@
+<form method="POST" class="space-y-6">
+    {% csrf_token %}
+
+    <div>
+        <label class="block text-sm font-semibold mb-2">
+            Bank Name
+        </label>
+        <input type="text"
+                name="bank_name"
+                class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <!-- Codes Row -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                Bank Code
+            </label>
+            <input type="text"
+                    maxlength="9"
+                    name="bank_code"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                Code Guichet
+            </label>
+            <input type="text"
+                    maxlength="4"
+                    name="code_guichet"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                BIC
+            </label>
+            <input type="text"
+                    maxlength="4"
+                    name="bic"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                Rib Key
+            </label>
+            <input type="text"
+                    maxlength="4"
+                    name="rib_key"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+    </div>
+    <div>
+        <label class="block text-sm font-semibold mb-2">
+            Account Holder
+        </label>
+        <input type="text"
+                name="titulaire"
+                class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div>
+        <label class="block text-sm font-semibold mb-2">
+            Bank Address
+        </label>
+        <input type="text"
+                name="bank_address"
+                class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                Bank Phone Number
+            </label>
+            <input type="text"
+                    name="bank_phone"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block email-sm font-semibold mb-2">
+                Email
+            </label>
+            <input type="text"
+                    name="admin_phone"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+    </div>
+
+    <!-- Bottom Codes -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                ZIP Code
+            </label>
+            <input type="text"
+                    maxlength="7"
+                    name="bank_pc"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                Country Code
+            </label>
+            <input type="text"
+                    maxlength="4"
+                    name="country_code"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-2">
+                Control Key
+            </label>
+            <input type="text"
+                    maxlength="5"
+                    name="controle_key"
+                    class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+    </div>
+
+
+    <div class="pt-6 flex justify-end">
+        <button type="submit"
+                class="px-8 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition">
+            Validate
+        </button>
+    </div>
+
+</form>

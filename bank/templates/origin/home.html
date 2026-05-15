@@ -1,6 +1,36 @@
-<!DOCTYPE html>
 {% extends 'origin/base.html' %}
 {% block content %}
     <h2 style="position: center;"> Hello World </h2>
+    <div class="container mt-5" style="max-width: 500px;">
+
+        <div class="container mt-5" style="max-width: 500px;">
+
+            <!-- Toggle buttons -->
+            <div class="d-flex justify-content-center gap-2 mb-4">
+
+                <button class="btn btn-primary"
+                    _="on click
+                        remove .d-none from #login-form
+                        add .d-none to #signup-form">
+                    Login
+                </button>
+
+                <button class="btn btn-secondary"
+                    _="on click
+                        remove .d-none from #signup-form
+                        add .d-none to #login-form">
+                    Signup
+                </button>
+
+            </div>
+
+            <div id="login-form">
+                {% include 'users/login.html' %}
+            </div>
+
+            <div id="signup-form" class="d-none">
+                {% include 'users/signup.html' %}
+            </div>
+
+        </div>
 {% endblock %}
-</html>
