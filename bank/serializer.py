@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Operation, NewBalanceAccount, BankStatementFile
+from .models import Operation, NewBalanceAccount, BankStatementFile, Bank
 
 
 class BankFileSerializer(serializers.ModelSerializer):
@@ -11,9 +11,10 @@ class BankFileSerializer(serializers.ModelSerializer):
 
 class BankSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BankStatementFile
+        model = Bank
         fields = '__all__'
         read_only_fields = ('id',)
+
 
 class OperationsSerializer(serializers.Serializer):
     class Meta:

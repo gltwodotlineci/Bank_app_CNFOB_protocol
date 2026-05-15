@@ -8,12 +8,28 @@
 
         <div class="flex items-center gap-3 mb-8">
 
-            <div class="relative">
-                <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Banks
-                    <span>▼</span>
-                </button>
-            </div>
+<div class="relative">
+
+    <!-- BUTTON -->
+    <button id="banksDropdownBtn"
+            class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+
+        Banks
+        <span id="dropdownArrow">▼</span>
+
+    </button>
+
+    <!-- DROPDOWN -->
+    <div id="banksDropdownMenu"
+         class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+
+        <div class="px-4 py-3 text-gray-500">
+            Loading...
+        </div>
+
+    </div>
+
+</div>
 
             <button id="btnBank"
                     class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
@@ -43,34 +59,5 @@
         display: none;
     }
 </style>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const btnBank = document.getElementById("btnBank");
-    const btnAccount = document.getElementById("btnAccount");
-
-    const bankForm = document.getElementById("bankForm");
-    const accountForm = document.getElementById("accountForm");
-
-    function hideAll() {
-        bankForm.classList.add("hidden");
-        accountForm.classList.add("hidden");
-    }
-
-    btnBank.addEventListener("click", () => {
-        hideAll();
-        bankForm.classList.remove("hidden");
-    });
-
-    btnAccount.addEventListener("click", () => {
-        hideAll();
-        accountForm.classList.remove("hidden");
-    });
-
-});
-
-
-</script>
 
 {% endblock %}

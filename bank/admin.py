@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Bank, AccountNumber, BankStatementFile,\
-    Operation, NewBalanceAccount
+    Operation, NewBalanceAccount, Company
 
+admin.site.register(Company)
 admin.site.register(Bank)
 admin.site.register(AccountNumber)
 admin.site.register(BankStatementFile)

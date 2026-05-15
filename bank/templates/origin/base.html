@@ -27,6 +27,7 @@
 <body>
 
 {% include 'origin/navbar.html' %}
+{% load static %}
 
 <div class="page-wrapper">
     <div class="content-container">
@@ -49,6 +50,6 @@
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
     });
 </script>
-
+<script src="{% static 'js/modules/bank.js' %}"></script>
 </body>
 </html>

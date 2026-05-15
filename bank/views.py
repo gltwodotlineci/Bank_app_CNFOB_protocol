@@ -49,8 +49,7 @@ def bank(request):
 
 
 def bank_form(request):
-    banks = Bank.objects.order_by('name')
-    return render(request, 'bank/partials/bank_form.html', {'banks':banks})
+    return render(request, 'bank/partials/bank_form.html')
 
 
 def account_form(request):
@@ -84,7 +83,6 @@ class BankViewset(viewsets.ModelViewSet):
     lookup_field = 'pk'
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
-
 
 '''
         for line in file2.readlines():
@@ -125,7 +123,6 @@ def general_view(request):
 def createBank(request):
     form = BankForm()
     if request.method == 'POST':
-        #print('Printing POST:', request.POST)
         form = BankForm(request.POST)
         if form.is_valid():
             form.save()
