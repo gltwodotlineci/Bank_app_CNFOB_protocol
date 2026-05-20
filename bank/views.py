@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
+
+from users.models import CustomUser
 from .models import Bank, AccountNumber, BankStatementFile
 from .forms import BankForm, AccountForm
 from datetime import datetime
@@ -11,6 +13,8 @@ from django.contrib import messages
 today = datetime.today()
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('welcome')
     return render(request, 'origin/home.html', {})
 
 
@@ -20,6 +24,7 @@ def welcome(request):
 
 def convert_date(name):
     return ''.join(char for char in name if char.isdigit() or char=='-')
+
 
 
 def charge_file(request):
@@ -42,6 +47,7 @@ def charge_file(request):
         return response
     return redirect("/importdocuments/")    
 
+
 def bank(request):
     banks = Bank.objects.order_by('name')
     accounts = AccountNumber.objects.order_by('account_number')
@@ -55,6 +61,10 @@ def bank_form(request):
 def account_form(request):
     accounts = AccountNumber.objects.order_by('account_number')
     return render(request, 'bank/partials/account_form.html', {'accounts':accounts})
+
+
+def accounts_statement(request):
+    return render(request, 'account_statement/statement.html')
 
 
 def importdocument(request):
@@ -99,11 +109,6 @@ class BankViewset(viewsets.ModelViewSet):
     return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
 '''
 
-def create_class_doc(request):
-    #        print(file2.readlines(10))
-    pass
-
-
 
 def select_name_doc(request):
     form = BankStatementFile(request.POST, request.FILES)
@@ -114,11 +119,14 @@ def select_name_doc(request):
 def importdata(request):
     return render(request,'import/importdata.html', {})
 '''
+
+
 def statement_of_accounts(request):
     return render(request, 'bank/account.html', {})
 
 def general_view(request):
     return render(request,'bank/general_view.html', {})
+
 
 def createBank(request):
     form = BankForm()
@@ -130,6 +138,7 @@ def createBank(request):
 
     context = {'form': form}
     return render(request, 'bank/bank_form.html', context)
+
 
 def createAccount(request):
     form = AccountForm()

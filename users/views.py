@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from rest_framework import renderers, viewsets
+from bank.models import Bank
 from users.models import CustomUser
 from rest_framework.views import APIView, Response
 from django.contrib.auth import authenticate, login, logout
@@ -85,3 +86,19 @@ class UserViewset(viewsets.ModelViewSet):
 
     lookup_field = 'pk'
     http_method_names = ['get', 'patch', 'delete', 'put']
+
+
+def admin_page(request):
+    user = request.user
+    if user.is_superuser or user.role == "A":
+        users = CustomUser.objects.all()
+        users = users.exclude(username=user.username)
+        banks = Bank.objects.all()
+        return render(request, 'users/admin_page.html',
+                      {"users": users, "banks": banks})
+    else:
+        return redirect('home')
+
+
+def user_modal(request):
+    return render(request, 'users/partials/user_modal.html')

@@ -1,0 +1,156 @@
+{% extends 'origin/base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Users -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+            <div class="bg-blue-600 text-white px-6 py-4">
+                <h2 class="text-xl font-bold">
+                    Users
+                </h2>
+            </div>
+            <div class="p-4 space-y-2">
+                {% for user in users %}
+                    <button type="button"
+                            onclick="toggleUserDetails('{{ user.id }}')"
+                            class="w-full text-left px-4 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
+                        {{ user.username }}
+                    </button>
+                    <div id="user-details-{{ user.id }}"
+                         class="hidden mt-2 mb-4 bg-gray-50 border border-gray-200 rounded-xl p-4">
+
+                        {% partial user_details %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Banks -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+
+            <div class="bg-green-600 text-white px-6 py-4">
+                <h2 class="text-xl font-bold">
+                    Banks
+                </h2>
+            </div>
+            <div class="p-4 space-y-2">
+                {% for bank in banks %}
+                    <button type="button"
+                            onclick="toggleBankDetails('{{ bank.id }}')"
+                            class="w-full text-left px-4 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
+                        {{ bank.name }}
+                    </button>
+                    <div id="bank-details-{{ bank.id }}"
+                         class="hidden mt-2 mb-4 bg-gray-50 border border-gray-200 rounded-xl p-4">
+                        {% partial bank_details %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Partialdef User -->
+{% partialdef user_details %}
+
+<div class="space-y-2">
+    <div>
+        <span class="font-semibold">Username:</span>
+        {{ user.username }}
+    </div>
+    <div>
+        <span class="font-semibold">Email:</span>
+        {{ user.email }}
+    </div>
+    <div>
+        <span class="font-semibold">Role:</span>
+        {{ user.get_role_display }}
+    </div>
+    <div>
+        <span class="font-semibold">Is Active:</span>
+        {{ user.is_active }}
+    </div>
+
+    <!-- Modify / Delete -->
+    <div class="flex items-center gap-3 pt-4">
+        <button type="button"
+                onclick="openUserModal('{{ user.id }}')"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Modify
+        </button>
+
+        {% include "users/partials/user_modal.html" with user=user %}
+
+        <button type="button"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+            Delete
+        </button>
+    </div>
+</div>
+
+{% endpartialdef %}
+
+<!-- PartialDef Bank -->
+{% partialdef bank_details %}
+<div class="space-y-2">
+    <div>
+        <span class="font-semibold">Bank Name:</span>
+        {{ bank.name }}
+    </div>
+    <div>
+        <span class="font-semibold">Bank Code:</span>
+        {{ bank.code }}
+    </div>
+    <div>
+        <span class="font-semibold">BIC:</span>
+        {{ bank.bic }}
+    </div>
+    <div class="flex items-center gap-3 pt-4">
+        <button type="button"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Modify
+        </button>
+        <button type="button"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+            Delete
+        </button>
+    </div>
+</div>
+
+{% endpartialdef %}
+
+
+<script>
+
+function toggleUserDetails(userId) {
+
+    const element = document.getElementById(`user-details-${userId}`);
+
+    element.classList.toggle("hidden");
+}
+
+function toggleBankDetails(bankId) {
+
+    const element = document.getElementById(`bank-details-${bankId}`);
+
+    element.classList.toggle("hidden");
+}
+
+function openUserModal(userId) {
+
+    document
+        .getElementById(`userModal-${userId}`)
+        .classList.remove("hidden");
+}
+
+function closeUserModal(userId) {
+
+    document
+        .getElementById(`userModal-${userId}`)
+        .classList.add("hidden");
+}
+
+</script>
+
+{% endblock %}

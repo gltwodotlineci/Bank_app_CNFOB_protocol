@@ -25,8 +25,10 @@
 </head>
 
 <body>
+{% if request.user.is_authenticated %}
+    {% include 'origin/navbar.html' %}
+{% endif %}
 
-{% include 'origin/navbar.html' %}
 {% load static %}
 
 <div class="page-wrapper">

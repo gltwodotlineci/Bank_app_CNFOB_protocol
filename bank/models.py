@@ -115,23 +115,25 @@ class Operation(models.Model):
     """
     Operation Model for the bank data
     Attributes:
-        id: Unique id for the operation
-        enrolling_nb: Enrolling number
-        bank_code: Bank code
-        account_number: Account number
-        operation_date: Operation date
-        operation_name: Operation name
-        amount_credit: Amount credited or to credit
-        amount_debit: Amount debited or to debit
+        id (integer): Unique id for the operation
+        record_code (str): Record code
+        bank_code (str): Bank code
+        account_number (str): Account number
+        date (date): Operation date
+        label (str): Operation label
+        amount (decimal): Amount credited or debited
+        credit_debit (str): Credit or Debit
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    enrolling_nb = models.CharField(max_length=3)
+    id = models.AutoField(primary_key=True, editable=False)
+    record_code = models.CharField(max_length=3)
     bank_code = models.CharField(max_length=7)
     account_number = models.CharField(max_length=15)
-    operation_date = models.DateField()
-    operation_name = models.CharField(max_length=10)
-    amount_credit = models.DecimalField(max_digits=12, decimal_places=2)
-    amount_debit = models.DecimalField(max_digits=12, decimal_places=2)
+    date = models.DateField()
+    operation_label = models.CharField(max_length=10)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    CREDIT, DEBIT = 'C', 'D'
+    CREDIT_DEBIT = (CREDIT, 'Credit'), (DEBIT, 'Debit')
+    credit_or_debit = models.CharField(max_length=1, choices=CREDIT_DEBIT)
 
     def __str__(self):
         return self.enrolling_nb

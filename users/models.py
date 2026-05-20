@@ -8,7 +8,8 @@ class UserRole(models.TextChoices):
     MANAGER = 'M', 'Manager'
     ADMIN = 'A', 'Admin'
     STAFF = 'S', 'Staff'
-    REGULAR = 'R', 'Regular'
+    REGULAR = 'R', 'Regular',
+    VISITOR = 'V', 'Visitor'
 
 
 class CustomUser(AbstractUser):

@@ -7,10 +7,15 @@
 
             <div class="flex items-center justify-between">
 
-                <!-- LOGO -->
-                <div class="text-xl font-bold tracking-wide">
-                    Banking System
-                </div>
+                {% if request.user.role == "A" or request.user.is_superuser%}
+
+                    <a href="{% url 'admin-page' %}">
+                        <div class="text-xl font-bold tracking-wide">
+                            Admin
+                        </div>
+                    </a>
+
+                {% endif %}
 
                 <!-- MAIN MENU -->
                 <div class="flex items-center space-x-6">
@@ -30,7 +35,7 @@
                         Bank
                     </a>
 
-                    <a href="{% url 'statement of accounts' %}"
+                    <a href="{% url 'statements' %}"
                        class="hover:text-blue-400 transition">
                         Detail Accounts
                     </a>
