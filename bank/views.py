@@ -4,9 +4,8 @@ from rest_framework import viewsets
 
 from users.models import CustomUser
 from .models import Bank, AccountNumber, BankStatementFile
-from .forms import BankForm, AccountForm
 from datetime import datetime
-from bank.serializer import BankFileSerializer, BankSerializer
+from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer
 from django.contrib import messages
 
 
@@ -77,6 +76,18 @@ def importdocument(request):
     return render(request, 'import_files/files.html', {})
 
 
+def bank_details(request):
+    bank_id = request.POST.get("bank")
+    selected_bank = None
+
+    if bank_id:
+        selected_bank = Bank.objects.get(id=bank_id)
+
+    return render(request, "bank/partials/bank_details.html", {
+        "selected_bank": selected_bank
+    })
+
+
 class BankFileViewset(viewsets.ModelViewSet):
     queryset = BankStatementFile.objects.all()
     serializer_class = BankFileSerializer
@@ -93,6 +104,31 @@ class BankViewset(viewsets.ModelViewSet):
     lookup_field = 'pk'
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        if request.headers.get("HX-Request"):
+            return render(request, "bank/partials/success_bank.html")
+
+        return response
+
+
+class AccountViewset(viewsets.ModelViewSet):
+    queryset = AccountNumber.objects.all()
+    serializer_class = AccountSerializer
+
+    lookup_field = 'pk'
+    http_method_names = ['get', 'post', 'patch', 'delete',
+                         'head', 'options']
+
+    def create(self, request, *args, **kwargs):
+
+        response = super().create(request, *args, **kwargs)
+        if request.headers.get("HX-Request"):
+            return render(request, "bank/partials/success_account.html")
+
+        return response
 
 '''
         for line in file2.readlines():
@@ -128,29 +164,30 @@ def general_view(request):
     return render(request,'bank/general_view.html', {})
 
 
-def createBank(request):
-    form = BankForm()
-    if request.method == 'POST':
-        form = BankForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
+# def createBank(request):
+#     form = BankForm()
+#     if request.method == 'POST':
+#         form = BankForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/')
 
-    context = {'form': form}
-    return render(request, 'bank/bank_form.html', context)
+#     context = {'form': form}
+#     return render(request, 'bank/bank_form.html', context)
 
 
 def createAccount(request):
-    form = AccountForm()
-    if request.method == 'POST':
-        #print('Printing POST:', request.POST)
-        form = AccountForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('list_banks/')
+    pass
+    # form = AccountForm()
+    # if request.method == 'POST':
+    #     #print('Printing POST:', request.POST)
+    #     form = AccountForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('list_banks/')
 
-    context = {'form': form}
-    return render(request, 'bank/account_form.html', context)
+    # context = {'form': form}
+    # return render(request, 'bank/account_form.html', context)
 
 '''
     banks = Bank.objects.all()
@@ -177,4 +214,3 @@ class UploadFileForm(forms.Form):
 
 
 '''
-

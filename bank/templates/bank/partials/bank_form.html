@@ -1,13 +1,17 @@
-<form method="POST" class="space-y-6">
-    {% csrf_token %}
+<form method="POST"
+      hx-post="/api/banks/"
+      hx-target="#toast"
+      hx-swap="outerHTML"
+      class="space-y-6">
 
-    <div>
+      <div>
+        <div id="toast"></div>
         <label class="block text-sm font-semibold mb-2">
             Bank Name
         </label>
         <input type="text"
                 id="name"
-                name="bank_name"
+                name="name"
                 class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
     </div>
 
@@ -21,7 +25,7 @@
             <input type="text"
                     id="bank_code"
                     maxlength="9"
-                    name="bank_code"
+                    name="code"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -32,7 +36,7 @@
             <input type="text"
                     id="branch_code"
                     maxlength="4"
-                    name="code_guichet"
+                    name="branch_code"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -42,8 +46,8 @@
             </label>
             <input type="text"
                     id="bic"
-                    maxlength="4"
-                    name="bic"
+                    maxlength="11"
+                    name="swift"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -64,7 +68,7 @@
         </label>
         <input type="text"
                 id="account_holder"
-                name="titulaire"
+                name="holder_name"
                 class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
     </div>
 
@@ -74,7 +78,7 @@
         </label>
         <input type="text"
                 id="address"
-                name="bank_address"
+                name="adresse"
                 class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
     </div>
 
@@ -86,7 +90,7 @@
             </label>
             <input type="text"
                     id="phone"
-                    name="bank_phone"
+                    name="phone"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -96,7 +100,7 @@
             </label>
             <input type="text"
                     id="email"
-                    name="admin_phone"
+                    name="email"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -112,7 +116,7 @@
             <input type="text"
                     id="zip_code"
                     maxlength="7"
-                    name="bank_pc"
+                    name="zip_code"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -122,9 +126,10 @@
             </label>
             <input type="text"
                     maxlength="4"
-                    name="country_code"
+                    name="country_key"
                     class="w-full bg-gray-50 border-2 border-gray-400 rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
+        <input type="hidden" name="user" value="{{ request.user.id }}">
 
         <div>
             <label class="block text-sm font-semibold mb-2">

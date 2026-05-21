@@ -1,0 +1,55 @@
+{% if selected_bank %}
+
+    <div class="mb-6">
+        <label class="block text-sm font-semibold mb-2">
+            BIC / SWIFT
+        </label>
+        <input type="text"
+               value="{{ selected_bank.swift }}"
+               readonly
+               class="w-full bg-gray-100 border border-gray-500 rounded-lg px-4 py-3">
+    </div>
+    <div class="text-sm text-gray-600">   
+    <div class="mb-6">
+        <label class="block text-sm font-semibold mb-2">Bank Code</label>
+        <input type="text"
+            id="code_b"
+            value="{{ selected_bank.code }}"
+            readonly
+            class="w-full bg-gray-100 border border-gray-500 rounded-lg px-4 py-3">
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-sm font-semibold mb-2">Branch Code</label>
+        <input type="text"
+            id="brch_code"
+            value="{{ selected_bank.branch_code }}"
+            readonly
+            class="w-full bg-gray-100 border border-gray-500 rounded-lg px-4 py-3">
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-sm font-semibold mb-2">Country Key</label>
+        <input type="text"
+            id="country_key2"
+            value="{{ selected_bank.country_key }}"
+            readonly
+            class="w-full bg-gray-100 border border-gray-500 rounded-lg px-4 py-3">
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-sm font-semibold mb-2">RIB Key</label>
+        <input type="text"
+            id="key_rib"
+            value="{{ selected_bank.rib_key }}"
+            readonly
+            class="w-full bg-gray-100 border border-gray-500 rounded-lg px-4 py-3">
+    </div>
+
+    </div>
+
+{% else %}
+    <div class="text-gray-400 text-sm">
+        Select a bank to display details
+    </div>
+{% endif %}

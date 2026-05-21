@@ -49,18 +49,14 @@ class Bank(models.Model):
                              on_delete=models.SET_NULL,
                              null=True,
                              related_name='bank')
-    company = models.ForeignKey(Company,
-                                on_delete=models.SET_NULL,
-                                null=True,
-                                related_name='baks_company')
-    name = models.CharField(max_length=60)
-    code = models.CharField(max_length=20)
-    branch_code = models.CharField(max_length=8)
-    rib_key = models.CharField(max_length=4)
-    bic = models.CharField(max_length=12)
+    name = models.CharField(max_length=60, unique=True)
+    code = models.CharField(max_length=5, unique=True)
+    branch_code = models.CharField(max_length=5)
+    rib_key = models.CharField(max_length=2)
+    swift = models.CharField(max_length=12, verbose_name='SWIFT')
     holder_name = models.CharField(max_length=80)
-    adresse = models.CharField(max_length=80, blank=True)
-    zip_code = models.CharField(max_length=5)
+    adresse = models.CharField(max_length=80, null=True, blank=True)
+    zip_code = models.CharField(max_length=5, null=True, blank=True)
     country_key = models.CharField(max_length=4)
     phone = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(max_length=254, blank=True, null=True)
@@ -80,8 +76,9 @@ class AccountNumber(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     account_number = models.CharField(max_length=15)
-    rib_key = models.CharField(max_length=10)
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.account_number

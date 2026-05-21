@@ -1,111 +1,155 @@
-<div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
 
-    <form method="POST">
-        {% csrf_token %}
+<form method="POST"
+        hx-post="/api/accounts/"
+        hx-target="#toast2"
+        hx-swap="outerHTML"
+        class="space-y-6">
 
-        <!-- Account Number -->
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-8 border border-gray-200 mt-10">
+        <div id="toast2"></div>
+
         <div class="mb-6">
+            <label class="block text-sm font-semibold mb-2">
+                Select Bank
+            </label>
+            <select name="bank"
+                    class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md"
+                    hx-post="{% url 'bank_preview' %}"
+                    hx-target="#bank-details"
+                    hx-swap="innerHTML">
+                <option value="">-- Choose a bank --</option>
+                {% for bank in banks %}
+                    <option value="{{ bank.id }}">
+                        {{ bank.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="bank-details">
+            {% include "bank/partials/bank_details.html" %}
+        </div>
+
+        <div class="mb-6 mt-6">
             <label class="block text-sm font-semibold mb-2">
                 Account Number
             </label>
+
             <input type="text"
-                   name="account_number"
-                   maxlength="20"
-                   class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                id="account_nb"
+                name="account_number"
+                maxlength="20"
+                class="w-full border border-gray-500 rounded-lg px-4 py-3">
         </div>
 
-        <!-- Account Type + Currency -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-            <div>
-                <label class="block text-sm font-semibold mb-2">
-                    Account Type
-                </label>
-                <select name="account_type"
-                        class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option value="">Select type</option>
-                    <option value="current">Current Account</option>
-                    <option value="savings">Savings Account</option>
-                    <option value="business">Business Account</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold mb-2">
-                    Currency
-                </label>
-                <input type="text"
-                       name="currency"
-                       maxlength="3"
-                       placeholder="EUR / USD / GBP"
-                       class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-
-        </div>
-
-        <!-- IBAN -->
         <div class="mb-6">
             <label class="block text-sm font-semibold mb-2">
                 IBAN
             </label>
+
             <input type="text"
-                   name="iban"
-                   maxlength="34"
-                   class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                id="iban"
+                maxlength="34"
+                class="w-full border border-gray-500 rounded-lg px-4 py-3">
         </div>
 
-        <!-- BIC -->
-        <div class="mb-6">
-            <label class="block text-sm font-semibold mb-2">
-                BIC / SWIFT
-            </label>
-            <input type="text"
-                   name="bic"
-                   maxlength="11"
-                   class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-
-        <!-- Owner -->
-        <div class="mb-6">
-            <label class="block text-sm font-semibold mb-2">
-                Account Holder
-            </label>
-            <input type="text"
-                   name="account_holder"
-                   class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-
-        <!-- Balance (optional admin field) -->
         <div class="mb-6">
             <label class="block text-sm font-semibold mb-2">
                 Initial Balance
             </label>
+
             <input type="number"
                    step="0.01"
-                   name="balance"
-                   class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                   name="amount"
+                   class="w-full border border-gray-500 rounded-lg px-4 py-3">
         </div>
 
-        <!-- Status -->
         <div class="mb-6">
             <label class="block text-sm font-semibold mb-2">
                 Status
             </label>
-            <select name="status"
-                    class="w-full bg-white border border-gray-500 rounded-lg px-4 py-3 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="blocked">Blocked</option>
+
+            <select name="active"
+                    class="w-full border border-gray-500 rounded-lg px-4 py-3">
+
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+
             </select>
         </div>
 
-        <!-- Submit -->
         <div class="flex justify-end pt-4">
             <button type="submit"
-                    class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition">
+                    class="px-8 py-3 bg-indigo-600 text-white rounded-xl">
                 Create Account
             </button>
         </div>
 
-    </form>
-</div>
+    </div>
+</form>
+
+<script>
+
+function setupIBANListeners() {
+
+    // Fields composing the iban
+    const countryKey = document.getElementById("conuntry_key2");
+    const bankCode = document.getElementById("code_b");
+    const branchCode = document.getElementById("brch_code");
+    const accountNb = document.getElementById("account_nb");
+    const ribKey = document.getElementById("key_rib");
+
+    // Target field
+    const ibanField = document.getElementById("iban");
+
+    // Stop if HTMX content not loaded yet
+    if (
+        !countryKey ||
+        !ribKey ||
+        !bankCode ||
+        !branchCode ||
+        !accountNb ||
+        !ibanField
+    ) {
+        return;
+    }
+
+    function updateIBAN() {
+
+        const iban =
+            "FR" +
+            (countryKey.value || "") +
+            (ribKey.value || "") +            
+            (bankCode.value || "") +
+            (branchCode.value || "") +
+            (accountNb.value || "") ;
+
+        ibanField.value = iban
+            .replace(/\s/g, "")
+            .replace(/(.{4})/g, "$1 ")
+            .trim();
+    }
+
+    // Remove previous listener duplication
+    accountNb.removeEventListener("input", updateIBAN);
+
+    // Listen to account number typing
+    accountNb.addEventListener("input", updateIBAN);
+
+    // Generate immediately after bank selection
+    updateIBAN();
+}
+
+// Initial page load
+document.addEventListener("DOMContentLoaded", setupIBANListeners);
+
+// After HTMX updates bank-details
+document.body.addEventListener("htmx:afterSwap", function(event) {
+
+    if (event.target.id === "bank-details") {
+        setupIBANListeners();
+    }
+});
+
+</script>
