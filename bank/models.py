@@ -64,6 +64,11 @@ class Bank(models.Model):
     def __str__(self):
         return self.name
 
+class Currency(models.TextChoices):
+    EUR = 'E'
+    USR = 'U'
+    CNY = 'C'
+
 
 class AccountNumber(models.Model):
     """
@@ -76,18 +81,15 @@ class AccountNumber(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     account_number = models.CharField(max_length=15)
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    bank = models.ForeignKey(Bank, on_delete=models.SET_NULL,
+                             related_name='accounts', null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=1, choices=Currency.choices,
+                                default=Currency.EUR)
     active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.account_number
-
-
-class FileState(models.TextChoices):
-    SELECTED = "S", "Selected"
-    PRECHARGED = "P", "Prechared"
-    CHARGED = "C", "Charged"    
 
 
 class BankStatementFile(models.Model):
@@ -104,8 +106,10 @@ class BankStatementFile(models.Model):
     name = models.FileField(upload_to='bank_statements/')
     archived = models.BooleanField(default=False)
     date_imported = models.DateField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
     date_generated = models.DateField(null=True, blank=True)
     date_updated = models.DateField(auto_now=True)
+    bank = models.ForeignKey(Bank, on_delete=models.SET_NULL, null=True)
 
 
 class Operation(models.Model):
@@ -126,14 +130,13 @@ class Operation(models.Model):
     bank_code = models.CharField(max_length=7)
     account_number = models.CharField(max_length=15)
     date = models.DateField()
-    operation_label = models.CharField(max_length=10)
+    label = models.CharField(max_length=45, null=True, blank=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    CREDIT, DEBIT = 'C', 'D'
-    CREDIT_DEBIT = (CREDIT, 'Credit'), (DEBIT, 'Debit')
+    CREDIT, DEBIT, LABEL = 'C', 'D', 'N'
+    CREDIT_DEBIT = [(CREDIT, 'Credit'),
+                    (DEBIT, 'Debit'),
+                    (LABEL, 'Label')]
     credit_or_debit = models.CharField(max_length=1, choices=CREDIT_DEBIT)
-
-    def __str__(self):
-        return self.enrolling_nb
 
 
 class NewBalanceAccount(models.Model):

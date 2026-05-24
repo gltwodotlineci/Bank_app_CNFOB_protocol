@@ -22,4 +22,4 @@ urlpatterns = [
     path('', include('bank.urls')),
     path('', include('users.urls')),
     path('admin/', admin.site.urls),
-]+static(settings.TEXT_URL, document_root=settings.TEXT_ROOT )
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )

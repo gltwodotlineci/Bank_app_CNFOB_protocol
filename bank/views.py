@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 
-from users.models import CustomUser
-from .models import Bank, AccountNumber, BankStatementFile
+from .models import Bank, AccountNumber, BankStatementFile, Operation
+from .services import BankFileInfo, OperationLine, CheckFileLines, \
+    EnrolleOperations
 from datetime import datetime
 from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer
 from django.contrib import messages
@@ -25,26 +26,69 @@ def convert_date(name):
     return ''.join(char for char in name if char.isdigit() or char=='-')
 
 
-
 def charge_file(request):
+    """
+    We will load the files before we check and charge
+    their data to the database
+    """
     type_files = ['csv', 'xlsx', 'txt', 'ods', 'QET']
 
     if request.method == "POST":
-        file = request.FILES.getlist('filename')
-        file_name = file[0].name
-        file_type = file_name.split('.')[-1].lower()
-        if not file_type in type_files:
+        bank_file_info = BankFileInfo(request, 'filename', BankStatementFile)
+        file_name, file_type, file = bank_file_info.file_info()
+
+        if file_type not in type_files:
             messages.error(request, "File type not supported")
-            return redirect("importdocuments/")
-        queryset = BankStatementFile.objects.all()
-        if queryset.filter(name=file_name).exists():
+            return redirect("importdocuments/", messages)
+
+        if bank_file_info.check_double(file_name):
             messages.error(request, "File already exists")
-            return redirect("importdocuments/")
-        BankStatementFile.objects.create(name=file_name, archived=False)
+            return redirect("importdocuments/", messages)
+
+        BankStatementFile.objects.create(name=file)
+
         response = HttpResponse()
         response["HX-Redirect"] = request.path
         return response
-    return redirect("/importdocuments/")    
+    return redirect("/importdocuments/")
+
+
+def check_file(request):
+    """
+    We will check if the file is valid
+    """
+    file_id = None
+    bank_id = None
+    if request.method == "POST":
+        file_id = request.POST.get("file_id")
+        bank_id = request.POST.get("bank_id")
+    if file_id is None or bank_id is None:
+        return redirect("/importdocuments/")
+    bank_file = BankStatementFile.objects.get(id=file_id)
+    bank = Bank.objects.get(id=bank_id)
+    path = bank_file.name.path
+    checked_file = CheckFileLines(path, bank_file, bank)
+
+    if checked_file.read_file() is False:
+        messages.error(request, "File is not valid")
+        return redirect("/importdocuments/", messages)
+
+
+def charge_data(request):
+    """
+    We will charge the file's checked data into
+    Operations table
+    """
+    file_id = None
+    if request.method == "POST":
+        file_id = request.POST.get("file_id")
+    if file_id is None:
+        messages.error(request, "Wrong file selected")
+        return redirect("/importdocuments/")
+    bank_file = BankStatementFile.objects.get(id=file_id)
+    enrolle_operation = EnrolleOperations(bank_file, Operation)
+    enrolle_operation.charge_data()
+    return redirect("/importdocuments/")
 
 
 def bank(request):
@@ -62,15 +106,17 @@ def account_form(request):
     return render(request, 'bank/partials/account_form.html', {'accounts':accounts})
 
 
-def accounts_statement(request):
-    return render(request, 'account_statement/statement.html')
+# def accounts_statement(request):
+
+#     return render(request, 'account_statement/statement_accounts.html')
 
 
 def importdocument(request):
     queryset = BankStatementFile.objects.order_by('date_imported')
     serializer = BankFileSerializer(queryset, many=True)
+    banks = Bank.objects.all()
     try:
-        return render(request, 'import_files/files.html', {'files':queryset})
+        return render(request, 'import_files/files.html', {'files':queryset, 'banks':banks})
     except Exception as e:
         print("No data or error serializer: ", e)
     return render(request, 'import_files/files.html', {})
@@ -130,87 +176,16 @@ class AccountViewset(viewsets.ModelViewSet):
 
         return response
 
-'''
-        for line in file2.readlines():
-            enrolling = line[0:2]
-            code_bank = line[2:7]
-            old_account = OldAccount.objects.create(enrolling_nb=enrolling,
-                                                    bank_code=code_bank,
-                                                    account_number="abc",
-                                                    date="efg",
-                                                    amount_credit="100",
-                                                    amount_debit="200"
-                                                    )
-            old_account.save
-    return render(request, 'import/importdata.html', {'selcteddocuments':selcteddocuments, 'importdocuments':importdocuments})
-'''
-
 
 def select_name_doc(request):
     form = BankStatementFile(request.POST, request.FILES)
     file = request.FILES['file']
     return HttpResponse("str(file)")
 
-'''
-def importdata(request):
-    return render(request,'import/importdata.html', {})
-'''
-
 
 def statement_of_accounts(request):
     return render(request, 'bank/account.html', {})
 
+
 def general_view(request):
     return render(request,'bank/general_view.html', {})
-
-
-# def createBank(request):
-#     form = BankForm()
-#     if request.method == 'POST':
-#         form = BankForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('/')
-
-#     context = {'form': form}
-#     return render(request, 'bank/bank_form.html', context)
-
-
-def createAccount(request):
-    pass
-    # form = AccountForm()
-    # if request.method == 'POST':
-    #     #print('Printing POST:', request.POST)
-    #     form = AccountForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('list_banks/')
-
-    # context = {'form': form}
-    # return render(request, 'bank/account_form.html', context)
-
-'''
-    banks = Bank.objects.all()
-    accounts = AccountNumber.objects.all()
-    account_nb = accounts.account_number
-    bank = banks.bank
-    iban_nb = bank.country_bank_code + banks.country_key + banks.bank_code + \
-              banks.branch_code + accounts.account_number + accounts.rib_key
-    context = {'name_bank': banks.name_bank,
-                'bank_code':banks.bank_code ,
-                'branch_code':banks.branch_code ,
-                'account_number': accounts.account_number,
-                'rib_key':accounts.rib_key,
-                'bic':banks.bic ,
-                'bank_adresse':banks.bank_adresse,
-                'country_bank_code':banks.country_bank_code,
-                'country_key':banks.country_key ,
-                'iban':iban_nb
-               }
-    return render(request, 'bank/account_form.html', context)
-
-class UploadFileForm(forms.Form):
-    file = forms.FielField()
-
-
-'''

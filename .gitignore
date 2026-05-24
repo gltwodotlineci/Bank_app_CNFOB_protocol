@@ -12,3 +12,6 @@ wheels/
 .env
 db.sqlite3
 .python-version
+*.txt
+*.log
+*.csv
