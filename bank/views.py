@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 
-from .models import Bank, AccountNumber, BankStatementFile, Operation
+from .models import Bank, Account, BankStatementFile, Operation
 from .services import BankFileInfo, OperationLine, CheckFileLines, \
     EnrolleOperations
 from datetime import datetime
@@ -86,15 +86,23 @@ def charge_data(request):
         messages.error(request, "Wrong file selected")
         return redirect("/importdocuments/")
     bank_file = BankStatementFile.objects.get(id=file_id)
-    enrolle_operation = EnrolleOperations(bank_file, Operation)
+    enrolle_operation = EnrolleOperations(bank_file,
+                                          Operation,
+                                          Account)
     enrolle_operation.charge_data()
     return redirect("/importdocuments/")
 
 
 def bank(request):
-    banks = Bank.objects.order_by('name')
-    accounts = AccountNumber.objects.order_by('account_number')
-    return render(request, 'bank/list_banks.html', {'banks':banks, 'accounts':accounts})
+    accounts, banks = None, None
+    try:
+        banks = Bank.objects.order_by('name')
+        accounts = Account.objects.order_by('number')
+    except Exception as e:
+        print("No data or error serializer: ", e)
+
+    return render(request, 'bank/list_banks.html',
+                  {'banks':banks, 'accounts':accounts})
 
 
 def bank_form(request):
@@ -102,13 +110,12 @@ def bank_form(request):
 
 
 def account_form(request):
-    accounts = AccountNumber.objects.order_by('account_number')
+    accounts = Account.objects.order_by('number')
     return render(request, 'bank/partials/account_form.html', {'accounts':accounts})
 
 
-# def accounts_statement(request):
-
-#     return render(request, 'account_statement/statement_accounts.html')
+def accounts_statement(request):
+    return render(request, 'account_statement/account_operations.html')
 
 
 def importdocument(request):
@@ -134,15 +141,6 @@ def bank_details(request):
     })
 
 
-class BankFileViewset(viewsets.ModelViewSet):
-    queryset = BankStatementFile.objects.all()
-    serializer_class = BankFileSerializer
-
-    lookup_field = 'pk'
-    http_method_names = ['get', 'post', 'patch', 'delete',
-                         'head', 'options']
-
-
 class BankViewset(viewsets.ModelViewSet):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
@@ -161,31 +159,49 @@ class BankViewset(viewsets.ModelViewSet):
 
 
 class AccountViewset(viewsets.ModelViewSet):
-    queryset = AccountNumber.objects.all()
+    queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
     lookup_field = 'pk'
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
 
-    def create(self, request, *args, **kwargs):
+    # def create(self, request, *args, **kwargs):
 
-        response = super().create(request, *args, **kwargs)
-        if request.headers.get("HX-Request"):
-            return render(request, "bank/partials/success_account.html")
+    #     response = super().create(request, *args, **kwargs)
+    #     if request.headers.get("HX-Request"):
+    #         return render(request, "bank/partials/success_account.html")
 
-        return response
-
-
-def select_name_doc(request):
-    form = BankStatementFile(request.POST, request.FILES)
-    file = request.FILES['file']
-    return HttpResponse("str(file)")
+    #     return response
 
 
-def statement_of_accounts(request):
-    return render(request, 'bank/account.html', {})
+class BankFileViewset(viewsets.ModelViewSet):
+    queryset = BankStatementFile.objects.all()
+    serializer_class = BankFileSerializer
+
+    lookup_field = 'pk'
+    http_method_names = ['get', 'post', 'patch', 'delete',
+                         'head', 'options']
 
 
-def general_view(request):
-    return render(request,'bank/general_view.html', {})
+class OperationViewset(viewsets.ModelViewSet):
+    queryset = Operation.objects.all()
+    serializer_class = BankFileSerializer
+
+    lookup_field = 'pk'
+    http_method_names = ['get', 'post', 'patch', 'delete',
+                         'head', 'options']
+
+
+# def select_name_doc(request):
+#     form = BankStatementFile(request.POST, request.FILES)
+#     file = request.FILES['file']
+#     return HttpResponse("str(file)")
+
+
+# def statement_of_accounts(request):
+#     return render(request, 'bank/account.html', {})
+
+
+# def general_view(request):
+#     return render(request,'bank/general_view.html', {})

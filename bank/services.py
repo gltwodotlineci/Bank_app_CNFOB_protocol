@@ -1,3 +1,5 @@
+from uuid import UUID
+
 
 class OperationLine():
     """
@@ -5,28 +7,29 @@ class OperationLine():
     Attributes:
         record_code (str): the record code of bank operatin
         bank_code (str): the bank code
-        account_number (str): the account number
+        number (str): the account number
         operation_date (str): the date of operation
         label (str): the type of operation
         amount (float): the value of operation
         operation_description (str): the description of operation
     """
     def __init__(self, record_code:str, bank_code:str,
-                 account_number:str, operation_date:str, label:str,
-                 amount:float, credit_debit:str):
+                 number:str, operation_date:str, label:str,
+                 amount:float, credit_debit:str, account):
         self.record_code = record_code
         self.bank_code = bank_code
-        self.account_number = account_number
+        self.number = number
         self.date = operation_date
         self.label = label
         self.amount = amount
         self.credit_debit = credit_debit
+        self.account = account
 
     def serialize_operations(self):
         return {
             'record_code': self.record_code,
             'bank_code': self.bank_code,
-            'account_number': self.account_number,
+            'account': self.get_account_id,
             'date': self.get_date,
             'label': self.label,
             'amount': self.get_amount,
@@ -36,8 +39,11 @@ class OperationLine():
     @property
     def get_date(self):
         date = self.date
-
         return f"20{date[4:6]}-{date[2:4]}-{date[0:2]}"
+
+    @property
+    def get_account_id(self):
+        return self.account.objects.get(number=self.number)
 
     @property
     def get_amount(self):
@@ -67,9 +73,10 @@ class BankFileInfo:
 
 
 class EnrolleOperations:
-    def __init__(self, checkedFile, classOperation):
+    def __init__(self, checkedFile, classOperation, classAccont):
         self.checkedFile = checkedFile
         self.classOperation = classOperation
+        self.classAccount = classAccont
     """
     Read the file and return a list of OperationLine
     """
@@ -102,9 +109,10 @@ class EnrolleOperations:
                 elif line[103] not in ['C', 'D']:
                     credit_debit = 'L'
                 op = OperationLine(record_code=line[0:2], bank_code=bank_code,
-                                    account_number=line[34:40],
+                                    number=line[22:33],
                                     operation_date=line[35:41], label=line[54:82],
-                                    amount=amount, credit_debit=credit_debit)
+                                    amount=amount, credit_debit=credit_debit,
+                                    account=self.classAccount)
                 self.classOperation.objects.create(**op.serialize_operations())
         file.archived = True
         file.save()

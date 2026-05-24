@@ -70,7 +70,7 @@ class Currency(models.TextChoices):
     CNY = 'C'
 
 
-class AccountNumber(models.Model):
+class Account(models.Model):
     """
     Account Number Model for the
     Attributes:
@@ -80,7 +80,7 @@ class AccountNumber(models.Model):
         bank: Bank as FK
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    account_number = models.CharField(max_length=15)
+    number = models.CharField(max_length=15)
     bank = models.ForeignKey(Bank, on_delete=models.SET_NULL,
                              related_name='accounts', null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -89,7 +89,7 @@ class AccountNumber(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.account_number
+        return self.number
 
 
 class BankStatementFile(models.Model):
@@ -128,7 +128,7 @@ class Operation(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     record_code = models.CharField(max_length=3)
     bank_code = models.CharField(max_length=7)
-    account_number = models.CharField(max_length=15)
+    account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     date = models.DateField()
     label = models.CharField(max_length=45, null=True, blank=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
