@@ -5,19 +5,22 @@ from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
 router = routers.DefaultRouter()
-router.register(r'bankfiles', BankFileViewset)
-router.register(r'banks', BankViewset)
-# router.register(r'accounts', AccountViewset)
+router.register(r'bankfiles', BankFileViewset, basename='bankfiles')
+router.register(r'banks', BankViewset, basename='banks')
+# router.register(r'operations', OperationViewset)
 
 # Nested routes for accounts adn operations
 bank_router = NestedSimpleRouter(router, r'banks', lookup='bank')
 bank_router.register(r'accounts', AccountViewset, basename='accounts')
 bank_router.register(r'operations', OperationViewset, basename='operations')
+oper_router = NestedSimpleRouter(bank_router, r'accounts', lookup='account')
+oper_router.register(r'operations', OperationViewset, basename='operation')
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('api/', include(router.urls)),
     path('api/', include(bank_router.urls)),
+    path('api/', include(oper_router.urls)),
 
     path('welcome/', views.welcome, name='welcome'),
     path('list_banks/', views.bank, name='bank'),
