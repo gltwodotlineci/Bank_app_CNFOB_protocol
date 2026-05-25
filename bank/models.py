@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from uuid import uuid4
 from bank_CFNOB_norm import settings

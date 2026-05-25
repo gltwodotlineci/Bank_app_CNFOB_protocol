@@ -71,7 +71,7 @@ async function createAccount(bankId) {
     };
 
     try {
-
+        console.log("The bank id is:___ ", bankId);
         const res = await fetch(`/api/banks/${bankId}/accounts/`, {
             method: "POST",
             headers: {

@@ -95,19 +95,19 @@ class EnrolleOperations:
         credit_debit = None
         amount = "000"
         file_path = file.name.path
-        credit_chars = ['{', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
-        debit_chars = ['}', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R']
+        credit_chars = ['{', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'R']
+        debit_chars = ['}', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
         with open(file_path, 'r', encoding='latin-1') as f:
             for raw_line  in f:
                 line = raw_line.strip('\n')
                 if line[0:2] in ['04', '01', '07']:
                     amount = line[90:103]
-                if line[103] in credit_chars:
+                if line[104] in credit_chars:
                     credit_debit = 'C'
-                elif line[103] in debit_chars:
+                elif line[104] in debit_chars:
                     credit_debit = 'D'
-                elif line[103] not in ['C', 'D']:
-                    credit_debit = 'L'
+                elif line[0:2] not in ['04']:
+                    credit_debit = 'N'
                 op = OperationLine(record_code=line[0:2], bank_code=bank_code,
                                     number=line[22:33],
                                     operation_date=line[35:41], label=line[54:82],
@@ -126,6 +126,7 @@ class CheckFileLines:
         self.record_codes = ['01', '04', '05', '07']
 
     def read_file(self):
+
         with open(self.file_path, 'r', encoding='latin-1') as file:
             for raw_line  in file:
                 line = raw_line.strip('\n')
@@ -145,5 +146,5 @@ class CheckFileLines:
             raise Exception('Record code not valid')
         if line[12:17] != self.bank.code:
             raise Exception('Bank not valid')
-        if line[22:33] not in [account.account_number for account in accounts]:
+        if line[22:33] not in [account.number for account in accounts]:
             raise Exception('Account not valid')

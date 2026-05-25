@@ -2,114 +2,102 @@
 
 {% block content %}
 
-<div class="container-fluid mt-4">
+    <div class="container-fluid mt-4">
 
-    <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4">
 
-        <div class="card-body">
+            <div class="card-body">
 
-            <div class="row g-3 align-items-end">
-                <!-- bank  -->
-                <div class="col-md-2">
+                <div class="row g-3 align-items-end">
+                    <!-- bank  -->
+                    <div class="col-md-2">
 
-                    <label class="form-label fw-bold">
-                        Bank
-                    </label>
+                        <label class="form-label fw-bold">
+                            Bank
+                        </label>
 
-                    <select class="form-select" name="bank" id="bank-select">
-                        <option value="">Loading banks...</option>
-                    </select>
-
-                </div>
-
-
-<div class="col-md-2">
-
-    <label class="form-label fw-bold">
-        Account N°
-    </label>
-
-    <select class="form-select"
-            name="account"
-            id="account-select">
-
-        <option value="">All</option>
-
-    </select>
-
-</div>
-
-                <!-- Extract -->
-                <div class="col-md-2">
-                    <label class="form-label fw-bold">
-                        Extract N°
-                    </label>
-
-                    <select class="form-select" name="extract">
-                        <option value="">All</option>
-
-                        {% for extract in extracts %}
-                            <option value="{{ extract.id }}">
-                                {{ extract.number }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <!-- RADIO FILTER -->
-                <div class="col-md-3">
-
-                    <label class="form-label fw-bold d-block">
-                        Pointage
-                    </label>
-
-                    <div class="d-flex gap-3">
-
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="pointage"
-                                   value="pointed">
-
-                            <label class="form-check-label">
-                                Pointed
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="pointage"
-                                   value="non_pointed">
-
-                            <label class="form-check-label">
-                                Non Pointed
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="pointage"
-                                   value="all"
-                                   checked>
-
-                            <label class="form-check-label">
-                                All
-                            </label>
-                        </div>
+                        <select class="form-select" name="bank" id="bank-select">
+                            <option value="">Loading banks...</option>
+                        </select>
 
                     </div>
 
+
+        <div class="col-md-2">
+
+            <label class="form-label fw-bold">
+                Account N°
+            </label>
+
+            <select class="form-select"
+                    name="account"
+                    id="account-select">
+
+                <option value="">All</option>
+
+            </select>
+
+        </div>
+
+
+
+                <!-- Pointed/not pointed/All -->
+        <div class="col-md-3">
+
+            <label class="form-label fw-bold d-block">
+                Pointage
+            </label>
+
+            <div class="d-flex gap-3">
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                            type="radio"
+                            name="pointage"
+                            id="pointed-radio"
+                            value="pointed">
+
+                    <label class="form-check-label">
+                        Pointed
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                            type="radio"
+                            name="pointage"
+                            id="non-pointed-radio"
+                            value="non_pointed">
+
+                    <label class="form-check-label">
+                        Non Pointed
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                            type="radio"
+                            name="pointage"
+                            id="all-radio"
+                            value="all"
+                            checked>
+
+                    <label class="form-check-label">
+                        All
+                    </label>
                 </div>
 
             </div>
 
         </div>
 
+        </div>
+
     </div>
 
-    <!-- TABLE -->
+    </div>
+
+    <!-- Operation Table -->
     <div class="card shadow-sm">
 
         <div class="card-body table-responsive">
@@ -133,7 +121,7 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="operations-body">
 
                     {% for operation in operations %}
 
@@ -211,7 +199,6 @@
 
     </div>
 
-    <!-- TOTALS -->
     <div class="card shadow-sm mt-4">
 
         <div class="card-body">
@@ -264,105 +251,5 @@
     </div>
 
 </div>
-
-<script>
-
-const bankSelect = document.getElementById("bank-select");
-const accountSelect = document.getElementById("account-select");
-
-
-async function loadBanks() {
-
-    try {
-
-        const response = await fetch("/api/banks/");
-        const banks = await response.json();
-
-        bankSelect.innerHTML = `
-            <option value="">-- Select Bank --</option>
-        `;
-
-        banks.forEach(bank => {
-
-            bankSelect.innerHTML += `
-                <option value="${bank.id}">
-                    ${bank.name}
-                </option>
-            `;
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        bankSelect.innerHTML = `
-            <option value="">
-                Error loading banks
-            </option>
-        `;
-    }
-}
-
-
-async function loadAccounts(bankId) {
-
-    accountSelect.innerHTML = `
-        <option value="">Loading...</option>
-    `;
-
-    try {
-
-        const response = await fetch(`/api/banks/${bankId}/accounts/`);
-        const accounts = await response.json();
-
-        accountSelect.innerHTML = `
-            <option value="">All</option>
-        `;
-
-        accounts.forEach(account => {
-
-            accountSelect.innerHTML += `
-                <option value="${account.id}">
-                    ${account.number}
-                </option>
-            `;
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        accountSelect.innerHTML = `
-            <option value="">
-                Error loading accounts
-            </option>
-        `;
-    }
-}
-
-
-bankSelect.addEventListener("change", function () {
-
-    const bankId = this.value;
-
-    if (!bankId) {
-
-        accountSelect.innerHTML = `
-            <option value="">All</option>
-        `;
-
-        return;
-    }
-
-    loadAccounts(bankId);
-});
-
-
-document.addEventListener(
-    "DOMContentLoaded",
-    loadBanks
-);
-
-</script>
 
 {% endblock %}

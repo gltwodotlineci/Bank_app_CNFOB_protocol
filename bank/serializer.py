@@ -22,11 +22,13 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = '__all__'
         read_only_fields = ('id',)
+      
 
-
-class OperationsSerializer(serializers.Serializer):
+class OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
+        fields = '__all__'
+        read_only_fields = ('id',)
 
 
 class NewBalanceAccountSerializer(serializers.Serializer):

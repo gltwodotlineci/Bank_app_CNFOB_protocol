@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 
 from .models import Bank, Account, BankStatementFile, Operation
-from .services import BankFileInfo, OperationLine, CheckFileLines, \
+from .services import BankFileInfo, CheckFileLines, \
     EnrolleOperations
 from datetime import datetime
-from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer
+from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer, OperationSerializer
 from django.contrib import messages
 
 
@@ -166,6 +166,9 @@ class AccountViewset(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
 
+    def perform_create(self, serializer):
+        serializer.save(bank_id=self.kwargs["bank_pk"])
+
     # def create(self, request, *args, **kwargs):
 
     #     response = super().create(request, *args, **kwargs)
@@ -186,22 +189,8 @@ class BankFileViewset(viewsets.ModelViewSet):
 
 class OperationViewset(viewsets.ModelViewSet):
     queryset = Operation.objects.all()
-    serializer_class = BankFileSerializer
+    serializer_class = OperationSerializer
 
     lookup_field = 'pk'
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
-
-
-# def select_name_doc(request):
-#     form = BankStatementFile(request.POST, request.FILES)
-#     file = request.FILES['file']
-#     return HttpResponse("str(file)")
-
-
-# def statement_of_accounts(request):
-#     return render(request, 'bank/account.html', {})
-
-
-# def general_view(request):
-#     return render(request,'bank/general_view.html', {})
