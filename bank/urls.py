@@ -12,7 +12,7 @@ router.register(r'banks', BankViewset, basename='banks')
 # Nested routes for accounts adn operations
 bank_router = NestedSimpleRouter(router, r'banks', lookup='bank')
 bank_router.register(r'accounts', AccountViewset, basename='accounts')
-bank_router.register(r'operations', OperationViewset, basename='operations')
+# bank_router.register(r'operations', OperationViewset, basename='operations')
 oper_router = NestedSimpleRouter(bank_router, r'accounts', lookup='account')
 oper_router.register(r'operations', OperationViewset, basename='operation')
 

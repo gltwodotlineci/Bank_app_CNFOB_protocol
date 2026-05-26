@@ -139,6 +139,10 @@ class Operation(models.Model):
                     (DEBIT, 'Debit'),
                     (LABEL, 'Label')]
     credit_or_debit = models.CharField(max_length=1, choices=CREDIT_DEBIT)
+    pointed = models.BooleanField(default=False)
+    pointer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+                                null=True, blank=True)
+    date_pointed = models.DateTimeField(null=True, blank=True)
 
 
 class NewBalanceAccount(models.Model):

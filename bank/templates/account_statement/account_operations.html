@@ -2,14 +2,19 @@
 
 {% block content %}
 
-    <div class="container-fluid mt-4">
+<div id="react-root"></div>
+{% load static %}
+
+
+<script type="module" src="{% static 'frontend_react/dist/assets/index-CA1UUcnE.js' %}"></script>
+
+<!-- <div class="container-fluid mt-4">
 
         <div class="card shadow-sm mb-4">
 
             <div class="card-body">
 
                 <div class="row g-3 align-items-end">
-                    <!-- bank  -->
                     <div class="col-md-2">
 
                         <label class="form-label fw-bold">
@@ -41,7 +46,6 @@
 
 
 
-                <!-- Pointed/not pointed/All -->
         <div class="col-md-3">
 
             <label class="form-label fw-bold d-block">
@@ -97,7 +101,6 @@
 
     </div>
 
-    <!-- Operation Table -->
     <div class="card shadow-sm">
 
         <div class="card-body table-responsive">
@@ -167,11 +170,11 @@
                             </td>
 
                             <td>
-                                {{ operation.pointed_date }}
+                                {{ operation.date_pointed }}
                             </td>
 
                             <td>
-                                {{ operation.pointer_person }}
+                                {{ operation.pointer }}
                             </td>
 
                         </tr>
@@ -250,6 +253,6 @@
 
     </div>
 
-</div>
+</div> -->
 
 {% endblock %}

@@ -10,6 +10,10 @@ admin.site.register(Account, AccountAdmin)
 admin.site.register(Company)
 admin.site.register(Bank)
 admin.site.register(BankStatementFile)
-admin.site.register(Operation)
+class OperationAdmin(admin.ModelAdmin):
+    list_display = ('account', 'label', 'amount', 'pointed')
+
+admin.site.register(Operation, OperationAdmin)
+
 admin.site.register(NewBalanceAccount)
 # Register your models here.

@@ -166,16 +166,12 @@ class AccountViewset(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
 
+    def get_queryset(self):
+        return Account.objects.filter(
+            bank_id=self.kwargs["bank_pk"])
+
     def perform_create(self, serializer):
         serializer.save(bank_id=self.kwargs["bank_pk"])
-
-    # def create(self, request, *args, **kwargs):
-
-    #     response = super().create(request, *args, **kwargs)
-    #     if request.headers.get("HX-Request"):
-    #         return render(request, "bank/partials/success_account.html")
-
-    #     return response
 
 
 class BankFileViewset(viewsets.ModelViewSet):
@@ -194,3 +190,17 @@ class OperationViewset(viewsets.ModelViewSet):
     lookup_field = 'pk'
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
+
+    def get_queryset(self):
+        return Operation.objects.filter(
+            account_id=self.kwargs["account_pk"])    
+
+    def perform_update(self, serializer):
+        pointed = serializer.validated_data.get('pointed', None)
+        if pointed is not None:
+            serializer.save(pointed=pointed,
+                            pointer=self.request.user,
+                            date_pointed=datetime.now())
+        else:
+            serializer.save()
+    
