@@ -10,12 +10,9 @@ function Operations() {
     const [selectedAccount, setSelectedAccount] = useState("");
 
     const [filter, setFilter] = useState("all");
-
     const [usersMap, setUsersMap] = useState({});
 
-    /* =========================
-       LOAD BANKS
-    ========================= */
+
     useEffect(() => {
         loadBanks();
     }, []);
@@ -34,9 +31,6 @@ function Operations() {
         }
     }
 
-    /* =========================
-       LOAD ACCOUNTS
-    ========================= */
     async function loadAccounts(bankId) {
 
         try {
@@ -54,9 +48,6 @@ function Operations() {
         }
     }
 
-    /* =========================
-       LOAD OPERATIONS
-    ========================= */
     async function loadOperations(bankId, accountId) {
 
         try {
@@ -76,9 +67,6 @@ function Operations() {
         }
     }
 
-    /* =========================
-       LOAD USERS
-    ========================= */
     async function loadUsers(operationsData) {
 
         const uniqueUsers = [
@@ -112,9 +100,6 @@ function Operations() {
         setUsersMap(newUsersMap);
     }
 
-    /* =========================
-       FORMAT DATE
-    ========================= */
     function formatDate(dateString) {
 
         if (!dateString) return "";
@@ -124,9 +109,6 @@ function Operations() {
         return date.toLocaleDateString();
     }
 
-    /* =========================
-       BANK CHANGE
-    ========================= */
     async function handleBankChange(event) {
 
         const bankId = event.target.value;
@@ -142,9 +124,6 @@ function Operations() {
         loadAccounts(bankId);
     }
 
-    /* =========================
-       ACCOUNT CHANGE
-    ========================= */
     async function handleAccountChange(event) {
 
         const accountId = event.target.value;
@@ -156,9 +135,7 @@ function Operations() {
         loadOperations(selectedBank, accountId);
     }
 
-    /* =========================
-       FILTERED OPERATIONS
-    ========================= */
+    /* Filtering the operations */
     const filteredOperations = useMemo(() => {
 
         if (filter === "all") {
@@ -177,9 +154,7 @@ function Operations() {
 
     }, [operations, filter]);
 
-    /* =========================
-       PATCH POINTING
-    ========================= */
+
     async function togglePointing(operationId, checked) {
 
         try {
@@ -238,9 +213,6 @@ function Operations() {
         }
     }
 
-    /* =========================
-       TOTALS
-    ========================= */
     const totalCredit = filteredOperations
         .filter(op => op.credit_or_debit === "C")
         .reduce(
@@ -266,14 +238,13 @@ function Operations() {
 
         <div className="container-fluid mt-4">
 
-            {/* FILTERS */}
             <div className="card shadow-sm mb-4">
 
                 <div className="card-body">
 
                     <div className="row g-3 align-items-end">
 
-                        {/* BANK */}
+                        {/* Bank filter */}
                         <div className="col-md-2">
 
                             <label className="form-label fw-bold">
@@ -305,7 +276,7 @@ function Operations() {
 
                         </div>
 
-                        {/* ACCOUNT */}
+                        {/* Account filter */}
                         <div className="col-md-2">
 
                             <label className="form-label fw-bold">
@@ -337,7 +308,7 @@ function Operations() {
 
                         </div>
 
-                        {/* FILTER */}
+                        {/* Filter checked, non checked */}
                         <div className="col-md-3">
 
                             <label className="form-label fw-bold d-block">
@@ -401,7 +372,7 @@ function Operations() {
 
             </div>
 
-            {/* TABLE */}
+            {/* Table Operations */}
             <div className="card shadow-sm">
 
                 <div className="card-body table-responsive">
@@ -513,7 +484,7 @@ function Operations() {
 
             </div>
 
-            {/* TOTALS */}
+            {/* Totals, credit, debit, sold */}
             <div className="card shadow-sm mt-4">
 
                 <div className="card-body">

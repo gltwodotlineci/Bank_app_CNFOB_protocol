@@ -3,176 +3,240 @@
 {% block content %}
 
 <div class="container mt-5">
-
-    <div class="row g-3 align-items-start flex-nowrap">
-
-        <!-- BANK SELECT -->
-        <div style="width: 220px;">
-
-            <select id="bankSelect"
-                    class="form-select form-select-sm">
-
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label class="form-label fw-bold">
+                Select Bank
+            </label>
+            <select id="bankSelect" class="form-select">
                 <option value="">
                     -- Select Bank --
                 </option>
-
                 {% for bank in banks %}
                     <option value="{{ bank.id }}">
                         {{ bank.name }}
                     </option>
                 {% endfor %}
-
             </select>
-
         </div>
-
-        <!-- LEFT: FILES -->
+    </div>
+    <div class="row">
         <div class="col-md-5">
-
-            <div class="card shadow-sm h-100">
-
+            <div class="card shadow-sm">
                 <div class="card-header text-center">
-                    <h4>Charged Files</h4>
+                    <strong>Charge Files</strong>
                 </div>
-
                 <div class="card-body">
-
-                    <!-- UPLOAD -->
-                    <form class="row g-2 align-items-center"
+                    <form class="d-flex gap-2 mb-3"
                           hx-post="/chargefile/"
                           hx-encoding="multipart/form-data"
                           hx-swap="none">
-
-                        <div class="col-10">
-                            <input type="file"
-                                   name="filename"
-                                   class="form-control"
-                                   multiple>
-                        </div>
-
-                        <div class="col">
-                            <button type="submit" style="font-size: 1.7rem;">
-                                ⬇️
-                            </button>
-                        </div>
-
+                        <input type="file"
+                               name="filename"
+                               class="form-control"
+                               multiple>
+                        <button type="submit" class="btn btn-dark">
+                            Upload
+                        </button>
                     </form>
-
-                    <!-- FILE LIST -->
-                    <ul class="list-group mb-4 mt-3">
-                        {% for file in files %}
-                            {% if file.checked == False and file.archived == False %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p>{{ file.name }}</p>
-                                    </div>
-                                    <button class="btn btn-dark btn-sm"
-                                            hx-post="/check_file/"
-                                            hx-trigger="click"
-                                            hx-swap="none"
-                                            hx-vals='js:{
-                                                bank_id: document.getElementById("bankSelect").value,
-                                                file_id: "{{ file.id }}"
-                                            }'>
-                                        Check file
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        x
-                                    </button>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-5">
-
-            <div class="card shadow-sm h-100">
-
-                <div class="card-header text-center">
-                    <h4>Selected Files</h4>
-                </div>
-
-                <div class="card-body">
-
-                    <ul class="list-group mb-4">
+                    <ul class="list-group">
 
                         {% for file in files %}
-                            {% if file.checked == True  and file.archived == False %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <input class="form-check-input me-2" type="checkbox">
-                                        {{ file.name }}
-                                    </div>
+                            {% if not file.checked and not file.archived %}
+                                <li id="file-{{ file.id }}"
+                                    class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ file.name }}</span>
                                     <div class="d-flex gap-2">
-                                    <button class="btn btn-dark btn-sm"
-                                            hx-post="/charge_data/"
-                                            hx-trigger="click"
-                                            hx-swap="none"
-                                            hx-vals='js:{
-                                                file_id: "{{ file.id }}"
-                                            }'>
-                                            Charge Data
+                                        <button type="button"
+                                                class="btn btn-dark btn-sm"
+                                                onclick="transferFile('{{ file.id }}', true)">
+                                            Check file
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="deleteFile('{{ file.id }}')">
+                                            x
                                         </button>
                                     </div>
                                 </li>
                             {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <div id="fileMessages" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header text-center">
+                    <strong>Selected Files</strong>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+
+                        {% for file in files %}
+                            {% if file.checked and not file.archived %}
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <input type="checkbox"
+                                               class="form-check-input me-2">
+                                        {{ file.name }}
+                                    </div>
+                                    <button class="btn btn-dark btn-sm"
+                                            onclick="chargeFile('{{ file.id }}')">
+                                        Charge File
+                                    </button>
+                                </li>
+
+                            {% endif %}
                         {% empty %}
+
                             <li class="list-group-item text-muted">
                                 No validated files
-                            </li>
+                             </li>
                         {% endfor %}
 
                     </ul>
                 </div>
-            </div>
-            <!-- Archived ARROW -->
-            <div class="col-md-1 d-flex justify-content-center align-items-center">
-                <button class="btn btn-dark btn-lg">Archived Files  <span>&#8628;</span></button>
-            </div>
+            </div>            
         </div>
     </div>
+        <div class="row mt-4">
+            <div class="col-md-12 d-flex justify-content-center">
+                <button class="btn btn-dark btn-lg">
+                    Archived Files ⤵
+                </button>
+            </div>
+        </div>
 </div>
 
 <script>
 
+const bankSelect = document.getElementById("bankSelect");
+bankSelect.addEventListener("change", function () {
+    localStorage.setItem("selectedBank", this.value);
+});
+
+/* restore bank */
+window.addEventListener("load", function () {
+    const saved = localStorage.getItem("selectedBank");
+    if (saved) {
+        bankSelect.value = saved;
+    }
+});
+
 function getCSRFToken() {
 
     let cookieValue = null;
-
-    document.cookie.split(';').forEach(cookie => {
-
+    document.cookie.split(";").forEach(cookie => {
         cookie = cookie.trim();
 
         if (cookie.startsWith("csrftoken=")) {
             cookieValue = cookie.substring("csrftoken=".length);
         }
-
     });
-
     return cookieValue;
 }
 
+function showMessage(type, text) {
+
+    const box = document.getElementById("fileMessages");
+    if (!box) return;
+    box.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${text}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
+function getBankId() {
+    const id = localStorage.getItem("selectedBank") || bankSelect.value;
+    return id && id.trim() !== "" ? id : null;
+}
+
+
+async function deleteFile(fileId) {
+
+    const response = await fetch(`/api/bankfiles/${fileId}/`, {
+        method: "DELETE",
+        headers: {
+            "X-CSRFToken": getCSRFToken()
+        }
+    });
+
+    if (response.ok) {
+        document.getElementById(`file-${fileId}`)?.remove();
+        showMessage("success", "File deleted successfully");
+
+    } else {
+        showMessage("danger", "Failed to delete file");
+    }
+}
+
+
 async function transferFile(fileId, checked) {
 
-    await fetch(`/api/bankfiles/${fileId}/`, {
+    const bankId = getBankId();
+    if (!bankId) {
+        showMessage("danger", "Please select a bank first");
+        return;
+    }
 
-        method: "PATCH",
-
+    const response = await fetch("/check_file/", {
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": getCSRFToken()
         },
-
         body: JSON.stringify({
-            checked_file: checked
+            file_id: fileId,
+            checked_file: checked,
+            bank_id: bankId
         })
-
     });
 
-    window.location.reload();
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        showMessage("danger", data.error || "File validation failed");
+        return;
+    }
+
+    showMessage("success", data.message || "File checked successfully");
+    setTimeout(() => {
+        window.location.reload();
+    }, 1500);
+}
+
+async function chargeFile(fileId) {
+
+    const bankId = getBankId();
+    if (!bankId) {
+        showMessage("danger", "Please select a bank first");
+        return;
+    }
+
+    const response = await fetch("/charge_data/", {
+
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify({
+            file_id: fileId,
+            bank_id: bankId
+        })
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        showMessage("danger", data.error || "Charge failed");
+        return;
+    }
+    showMessage("success", data.message || "File charged successfully");
 }
 
 </script>

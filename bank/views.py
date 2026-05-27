@@ -1,4 +1,6 @@
-from django.http import HttpResponse
+import json
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 
@@ -60,18 +62,30 @@ def check_file(request):
     file_id = None
     bank_id = None
     if request.method == "POST":
-        file_id = request.POST.get("file_id")
-        bank_id = request.POST.get("bank_id")
+        data = json.loads(request.body.decode("utf-8"))
+        file_id = data.get("file_id")
+        bank_id = data.get("bank_id")
+
     if file_id is None or bank_id is None:
-        return redirect("/importdocuments/")
+        return JsonResponse(
+            {"error": "Missing file or bank"},
+            status=400
+        )
     bank_file = BankStatementFile.objects.get(id=file_id)
     bank = Bank.objects.get(id=bank_id)
     path = bank_file.name.path
     checked_file = CheckFileLines(path, bank_file, bank)
 
     if checked_file.read_file() is False:
-        messages.error(request, "File is not valid")
-        return redirect("/importdocuments/", messages)
+        return JsonResponse(
+            {"error": checked_file.error_message},
+            status=400
+        )
+
+    return JsonResponse({
+        "success": True,
+        "message": "File processed successfully"
+    })
 
 
 def charge_data(request):

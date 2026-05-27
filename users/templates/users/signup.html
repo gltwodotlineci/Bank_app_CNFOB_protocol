@@ -1,27 +1,102 @@
-<form hx-post="/api/register/">
-
+<form hx-post="/api/register/"
+      hx-swap="none"
+      id="signupForm">
+    <div id="signupMessage" class="mb-3"></div>
     <div class="mb-3">
         <label>Username</label>
-        <input type="text" name="username" class="form-control">
+        <input type="text"
+               name="username"
+               class="form-control"
+               required>
     </div>
-
     <div class="mb-3">
         <label>Email</label>
-        <input type="email" name="email" class="form-control">
+        <input type="email"
+               name="email"
+               class="form-control"
+               required>
     </div>
-
     <div class="mb-3">
         <label>Password</label>
-        <input id="password" type="password" name="password" class="form-control">
+        <input id="password"
+               type="password"
+               name="password"
+               class="form-control"
+               required>
     </div>
-
     <div class="mb-3">
         <label>Confirm Password</label>
-        <input id="confirm" type="password" class="form-control">
+        <input id="confirm"
+               type="password"
+               name="confirm_password"
+               class="form-control"
+               required>
     </div>
-
     <button class="btn btn-primary w-100">
         Signup
     </button>
-
 </form>
+
+
+<script>
+
+document.body.addEventListener("htmx:beforeRequest", function(evt) {
+    if (evt.target.id !== "signupForm") return;
+    const password =
+        document.getElementById("password").value;
+    const confirm =
+        document.getElementById("confirm").value;
+    const messageBox =
+        document.getElementById("signupMessage");
+    if (password !== confirm) {
+        evt.preventDefault();
+        messageBox.innerHTML = `
+            <div class="alert alert-danger">
+                Passwords do not match
+            </div>
+        `;
+        return false;
+    }
+});
+
+document.body.addEventListener("htmx:afterRequest", function(evt) {
+    if (evt.detail.target.id !== "signupForm") return;
+    const messageBox =
+        document.getElementById("signupMessage");
+    try {
+        const response =
+            JSON.parse(evt.detail.xhr.responseText);
+        if (evt.detail.xhr.status >= 400) {
+
+            messageBox.innerHTML = `
+                <div class="alert alert-danger">
+                    ${response.message || "Signup failed"}
+                </div>
+            `;
+            return;
+        }
+
+        messageBox.innerHTML = `
+            <div class="alert alert-success">
+                ${response.message || "Account created"}
+            </div>
+        `;
+
+        if (response.redirect_url) {
+            setTimeout(() => {
+                window.location.href =
+                    response.redirect_url;
+            }, 1000);
+        }
+
+    } catch (e) {
+
+        messageBox.innerHTML = `
+            <div class="alert alert-danger">
+                Unexpected server response
+            </div>
+        `;
+    }
+});
+
+</script>

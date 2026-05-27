@@ -36,12 +36,12 @@ class RegisterUserView(APIView):
             user.save()
             login(request, user)
 
-            response = HttpResponse()
-            response["HX-Redirect"] = "/new_user/"
-            return response
+            return Response({'message': 'User created successfully',
+                             "redirect_url": "/new_user/"})
 
         msg = "The username or the email already exists"
-        return Response({'message': f'Error creating user {msg}'})
+        return Response({'message': f'Error creating user {msg}'},
+                        status=400)
 
 
 class LoginUserView(APIView):
@@ -60,11 +60,12 @@ class LoginUserView(APIView):
             if user:
                 login(request, user)
 
-                response = HttpResponse()
-                response["HX-Redirect"] = "/welcome/"
-                return response
+                return Response({'message': 'Login successful',
+                                "redirect_url": "/welcome/"})
 
-            return Response({'message': 'Invalid username or password'})
+            return Response({
+                "message": "Invalid username or password"
+            }, status=400)
 
 
 class LogoutUserView(APIView):

@@ -126,19 +126,22 @@ class CheckFileLines:
         self.record_codes = ['01', '04', '05', '07']
 
     def read_file(self):
+        try:
+            with open(self.file_path, 'r', encoding='latin-1') as file:
+                for raw_line  in file:
+                    line = raw_line.strip('\n')
+                    if not line.strip():
+                        continue
+                    if self.check_record_and_bank(line) is False:
+                        return False
 
-        with open(self.file_path, 'r', encoding='latin-1') as file:
-            for raw_line  in file:
-                line = raw_line.strip('\n')
-                if not line.strip():
-                    continue
-                if self.check_record_and_bank(line) is False:
-                    return False
-
-        self.bank_file.checked = True
-        self.bank_file.bank = self.bank
-        self.bank_file.save()
-        return True
+            self.bank_file.checked = True
+            self.bank_file.bank = self.bank
+            self.bank_file.save()
+            return True
+        except Exception as e:
+            self.error_message = str(e)
+            return False
 
     def check_record_and_bank(self, line):
         accounts = self.bank.accounts.all()

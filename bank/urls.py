@@ -7,12 +7,10 @@ from rest_framework_nested.routers import NestedSimpleRouter
 router = routers.DefaultRouter()
 router.register(r'bankfiles', BankFileViewset, basename='bankfiles')
 router.register(r'banks', BankViewset, basename='banks')
-# router.register(r'operations', OperationViewset)
 
 # Nested routes for accounts adn operations
 bank_router = NestedSimpleRouter(router, r'banks', lookup='bank')
 bank_router.register(r'accounts', AccountViewset, basename='accounts')
-# bank_router.register(r'operations', OperationViewset, basename='operations')
 oper_router = NestedSimpleRouter(bank_router, r'accounts', lookup='account')
 oper_router.register(r'operations', OperationViewset, basename='operation')
 
@@ -32,7 +30,4 @@ urlpatterns = [
     path('chargefile/', views.charge_file, name='charge_file'),
     path('importdocuments/', views.importdocument, name='import'),
     path('statements/', views.accounts_statement, name='statements'),
-    # path('general_view/', views.general_view, name="general_view"),
-    # path('add_bank', views.createBank, name="new_bank"),
-    # path('add_account_number', views.createAccount, name="new_account_number")
 ]
