@@ -5,7 +5,8 @@ from bank.models import Bank
 from users.models import CustomUser
 from rest_framework.views import APIView, Response
 from django.contrib.auth import authenticate, login, logout
-
+from rest_framework.permissions import IsAuthenticated
+from users.permisions import IsAdmin
 from users.serializers import UserSerializer, LoginSerializer
 
 
@@ -82,6 +83,11 @@ class LogoutUserView(APIView):
 
 
 class UserViewset(viewsets.ModelViewSet):
+    """
+    User Viewset for the admin page
+    Methods: get, patch, delete, put
+    """
+    permission_classes = [IsAuthenticated, IsAdmin]
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
