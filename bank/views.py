@@ -10,7 +10,6 @@ from .services import BankFileInfo, CheckFileLines, \
 from datetime import datetime
 from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer, OperationSerializer
 from django.contrib import messages
-from .models import Company
 
 today = datetime.today()
 
@@ -38,9 +37,6 @@ def charge_file(request):
     We will load the files before we check and charge
     their data to the database
     """
-    if request.user.is_authenticated and request.user.role == "V":
-        return redirect('new_user')
-
     type_files = ['csv', 'xlsx', 'txt', 'ods', 'QET']
 
     if request.method == "POST":
@@ -67,9 +63,6 @@ def check_file(request):
     """
     We will check if the file is valid
     """
-    if request.user.is_authenticated and request.user.role == "V":
-        return redirect('new_user')
-
     file_id = None
     bank_id = None
     if request.method == "POST":
@@ -104,9 +97,6 @@ def charge_data(request):
     We will charge the file's checked data into
     Operations table
     """
-    if request.user.is_authenticated and request.user.role == "V":
-        return redirect('new_user')
-
     file_id = None
     if request.method == "POST":
         file_id = request.POST.get("file_id")

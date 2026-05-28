@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-from users.models import CustomUser, UserRole
+from users.models import UserRole
 
 
 class IsAdmin(BasePermission):
@@ -15,11 +15,9 @@ class IsAdmin(BasePermission):
             return True
 
         if request.method in SAFE_METHODS:
-            if user in obj.get(user=user):
-                return True
-            return user.role == UserRole.MANAGER
+            return user == obj or user.role == UserRole.ADMIN
 
         if request.method in ["DELETE", "PATCH", "PUT"]:
-            return user.role == UserRole.MANAGER
+            return user.role == UserRole.ADMIN
 
         return False
