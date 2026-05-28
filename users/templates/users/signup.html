@@ -37,10 +37,9 @@
     </button>
 </form>
 
-
 <script>
 
-document.body.addEventListener("htmx:beforeRequest", function(evt) {
+document.body.addEventListener("htmx:beforeRequest", function (evt) {
     if (evt.target.id !== "signupForm") return;
     const password =
         document.getElementById("password").value;
@@ -48,6 +47,7 @@ document.body.addEventListener("htmx:beforeRequest", function(evt) {
         document.getElementById("confirm").value;
     const messageBox =
         document.getElementById("signupMessage");
+
     if (password !== confirm) {
         evt.preventDefault();
         messageBox.innerHTML = `
@@ -59,15 +59,17 @@ document.body.addEventListener("htmx:beforeRequest", function(evt) {
     }
 });
 
-document.body.addEventListener("htmx:afterRequest", function(evt) {
+
+document.body.addEventListener("htmx:afterRequest", function (evt) {
+
     if (evt.detail.target.id !== "signupForm") return;
     const messageBox =
         document.getElementById("signupMessage");
+
     try {
         const response =
             JSON.parse(evt.detail.xhr.responseText);
         if (evt.detail.xhr.status >= 400) {
-
             messageBox.innerHTML = `
                 <div class="alert alert-danger">
                     ${response.message || "Signup failed"}
@@ -75,13 +77,11 @@ document.body.addEventListener("htmx:afterRequest", function(evt) {
             `;
             return;
         }
-
         messageBox.innerHTML = `
             <div class="alert alert-success">
                 ${response.message || "Account created"}
             </div>
         `;
-
         if (response.redirect_url) {
             setTimeout(() => {
                 window.location.href =

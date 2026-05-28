@@ -1,197 +1,141 @@
 <div id="userModal-{{ user.id }}"
      class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-
     <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6">
-
-        <!-- HEADER -->
         <div class="flex items-center justify-between mb-6">
-
             <h2 class="text-xl font-bold">
                 Modify User
             </h2>
-
             <button type="button"
                     onclick="closeUserModal('{{ user.id }}')"
                     class="text-gray-500 hover:text-black text-xl">
-
                 ✕
-
             </button>
-
         </div>
-
-        <!-- FORM -->
-        <form onsubmit="updateUser(event, '{{ user.id }}')">
-
-            <!-- USERNAME -->
+        <!-- form -->
+        <form id="userForm-{{ user.id }}"
+            onsubmit="updateUser(event, '{{ user.id }}')">
+            <!-- username -->
             <div class="mb-4">
-
                 <label class="block text-sm font-semibold mb-2">
                     Username
                 </label>
-
                 <div class="w-full bg-gray-100 border border-gray-300 rounded-lg px-4 py-3">
-
                     {{ user.username }}
-
                 </div>
-
             </div>
-
-            <!-- ROLE -->
+            <!-- Role -->
             <div class="mb-4">
-
                 <label class="block text-sm font-semibold mb-2">
                     Role
                 </label>
-
                 <select id="role_{{ user.id }}"
                         class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                     <option value="A"
                         {% if user.role == 'A' %}selected{% endif %}>
                         Admin
                     </option>
-
                     <option value="S"
                         {% if user.role == 'S' %}selected{% endif %}>
                         Staff
                     </option>
-
                     <option value="M"
                         {% if user.role == 'M' %}selected{% endif %}>
                         Manager
                     </option>
-
                     <option value="V"
                         {% if user.role == 'V' %}selected{% endif %}>
                         Visitor
                     </option>
-
                 </select>
-
             </div>
-
-            <!-- ACTIVE -->
-            <div class="mb-6 flex items-center gap-3">
-
-                <input type="checkbox"
-                       id="is_active_{{ user.id }}"
-                       class="w-5 h-5"
-                       {% if user.is_active %}checked{% endif %}>
-
-                <label for="is_active_{{ user.id }}"
-                       class="font-medium">
-
-                    Active
-
+            <!-- Company -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold mb-2">
+                    Choose company
                 </label>
-
+                <select id="company_{{ user.id }}"
+                        name="company"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select Company --</option>
+                    {% for company in request.user.companies.all %}
+                        <option value="{{ company.id }}">
+                            {{ company.name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-
-            <!-- BUTTONS -->
             <div class="flex items-center justify-end gap-3">
-
                 <button type="button"
                         onclick="closeUserModal('{{ user.id }}')"
                         class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">
-
                     Cancel
-
                 </button>
-
                 <button type="submit"
                         class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
-
                     Confirm
-
                 </button>
-
             </div>
-
         </form>
-
     </div>
-
 </div>
-
-
 <script>
 
 async function updateUser(event, userId) {
-
     event.preventDefault();
-
     const role =
         document.getElementById(`role_${userId}`).value;
-
-    const isActive =
-        document.getElementById(`is_active_${userId}`).checked;
-
-    try {
-
-function getCookie(name) {
-
-    let cookieValue = null;
-
-    if (document.cookie && document.cookie !== "") {
-
-        const cookies = document.cookie.split(";");
-
-        for (let cookie of cookies) {
-
-            cookie = cookie.trim();
-
-            if (cookie.startsWith(name + "=")) {
-
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-
-                break;
+    const companySelect =
+        document.getElementById(`company_${userId}`);
+    const company = companySelect ? companySelect.value : null;
+    console.log("ROLE:", role);
+    console.log("COMPANY:", company);
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-
-    return cookieValue;
-}        
-
-
-const response = await fetch(`/api/users/${userId}/`, {
-
-        method: "PATCH",
-
+    try {
+        const response = await fetch(`/api/users/${userId}/`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCookie("csrftoken")
             },
-
             body: JSON.stringify({
                 role: role,
-                is_active: isActive
+                company: company || null
             })
-
         });
+        const data = await response.json();
+        console.log("SERVER RESPONSE:", data);
         if (!response.ok) {
             throw new Error("Failed to update user");
         }
         closeUserModal(userId);
     } catch (error) {
         console.error(error);
-
         alert("Error updating user");
     }
 }
 
 function openUserModal(userId) {
-
     document
         .getElementById(`userModal-${userId}`)
         .classList.remove("hidden");
 }
 
 function closeUserModal(userId) {
-
     document
         .getElementById(`userModal-${userId}`)
         .classList.add("hidden");

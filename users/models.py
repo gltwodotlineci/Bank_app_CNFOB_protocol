@@ -21,5 +21,5 @@ class CustomUser(AbstractUser):
         email: Email of the user
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    role = models.CharField(max_length=1, choices=UserRole.choices, default=UserRole.REGULAR)
+    role = models.CharField(max_length=1, choices=UserRole.choices, default=UserRole.VISITOR)
     email = models.EmailField(unique=True)

@@ -24,7 +24,7 @@ class Company(models.Model):
         company_account_currency: Currency of the company account
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user = models.ManyToManyField(CustomUser, related_name='company')
+    users = models.ManyToManyField(CustomUser, related_name='companies')
     name = models.CharField(max_length=100)
     company_code = models.CharField(max_length=100)
     company_address = models.CharField(max_length=100)

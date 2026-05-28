@@ -10,18 +10,23 @@ from .services import BankFileInfo, CheckFileLines, \
 from datetime import datetime
 from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer, OperationSerializer
 from django.contrib import messages
-
+from .models import Company
 
 today = datetime.today()
 
+
 def home(request):
-    if request.user.is_authenticated:
-        return redirect('welcome')
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
     return render(request, 'origin/home.html', {})
 
 
 def welcome(request):
-    return render(request, 'origin/welcome.html', {})
+    if request.user.is_authenticated:
+        if request.user.role == "V":
+            return redirect('new_user')
+        return render(request, 'origin/welcome.html', {})
+    return redirect('home')
 
 
 def convert_date(name):
@@ -33,6 +38,9 @@ def charge_file(request):
     We will load the files before we check and charge
     their data to the database
     """
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
+
     type_files = ['csv', 'xlsx', 'txt', 'ods', 'QET']
 
     if request.method == "POST":
@@ -59,6 +67,9 @@ def check_file(request):
     """
     We will check if the file is valid
     """
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
+
     file_id = None
     bank_id = None
     if request.method == "POST":
@@ -93,6 +104,9 @@ def charge_data(request):
     We will charge the file's checked data into
     Operations table
     """
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
+
     file_id = None
     if request.method == "POST":
         file_id = request.POST.get("file_id")
@@ -108,6 +122,8 @@ def charge_data(request):
 
 
 def bank(request):
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
     accounts, banks = None, None
     try:
         banks = Bank.objects.order_by('name')
@@ -129,24 +145,32 @@ def account_form(request):
 
 
 def accounts_statement(request):
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
     return render(request, 'account_statement/account_operations.html')
 
 
 def importdocument(request):
-    queryset = BankStatementFile.objects.order_by('date_imported')
-    serializer = BankFileSerializer(queryset, many=True)
-    banks = Bank.objects.all()
-    try:
-        return render(request, 'import_files/files.html', {'files':queryset, 'banks':banks})
-    except Exception as e:
-        print("No data or error serializer: ", e)
-    return render(request, 'import_files/files.html', {})
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
+
+    if request.user.is_superuser or request.user.role == "A":
+        queryset = BankStatementFile.objects.order_by('date_imported')
+        serializer = BankFileSerializer(queryset, many=True)
+        banks = Bank.objects.all()
+        try:
+            return render(request, 'import_files/files.html', {'files':queryset, 'banks':banks})
+        except Exception as e:
+            print("No data or error serializer: ", e)
+        return render(request, 'import_files/files.html', {})
+    return redirect('home')
 
 
 def bank_details(request):
     bank_id = request.POST.get("bank")
     selected_bank = None
-
+    if request.user.is_authenticated and request.user.role == "V":
+        return redirect('new_user')
     if bank_id:
         selected_bank = Bank.objects.get(id=bank_id)
 

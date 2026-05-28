@@ -68,8 +68,12 @@
         {{ user.get_role_display }}
     </div>
     <div>
-        <span class="font-semibold">Is Active:</span>
-        {{ user.is_active }}
+        <span class="font-semibold">Associete to company:</span>
+        {% for company in user.companies.all %}
+            {{ company.name }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            No company
+        {% endfor %}
     </div>
 
     <!-- Modify / Delete -->
@@ -84,7 +88,7 @@
 
         <button type="button"
                 class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-            Desactivate
+            Deactivate
         </button>
     </div>
 </div>
