@@ -10,6 +10,8 @@ from .services import BankFileInfo, CheckFileLines, \
 from datetime import datetime
 from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer, OperationSerializer
 from django.contrib import messages
+from rest_framework.permissions import IsAuthenticated
+from .permissions import BankAccountPermission, FileOperationPermission
 
 today = datetime.today()
 
@@ -170,6 +172,7 @@ def bank_details(request):
 
 
 class BankViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, BankAccountPermission]
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
 
@@ -179,7 +182,6 @@ class BankViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
-
         if request.headers.get("HX-Request"):
             return render(request, "bank/partials/success_bank.html")
 
@@ -187,6 +189,7 @@ class BankViewset(viewsets.ModelViewSet):
 
 
 class AccountViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, BankAccountPermission]
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
@@ -203,6 +206,7 @@ class AccountViewset(viewsets.ModelViewSet):
 
 
 class BankFileViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, FileOperationPermission]
     queryset = BankStatementFile.objects.all()
     serializer_class = BankFileSerializer
 
@@ -212,6 +216,7 @@ class BankFileViewset(viewsets.ModelViewSet):
 
 
 class OperationViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, FileOperationPermission]
     queryset = Operation.objects.all()
     serializer_class = OperationSerializer
 
