@@ -66,6 +66,26 @@ class Bank(models.Model):
     def __str__(self):
         return self.name
 
+
+class CompanyBank(models.Model):
+    """
+    Company Bank Model in order of managing multiple tenants
+    between companies and banks
+    Attributes:
+        id: Unique id for the company bank
+        company: Company as FK
+        bank: Bank as FK
+        swift: SWIFT code of the company bank
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_banks')
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='company_banks')
+    swift = models.CharField(max_length=12, verbose_name='SWIFT')
+
+    class Meta:
+        unique_together = ('company', 'bank', 'swift')
+
+
 class Currency(models.TextChoices):
     EUR = 'E'
     USR = 'U'

@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 
-from .models import Bank, Account, BankStatementFile, Operation
+from .models import Bank, Account, BankStatementFile, Operation, Company
 from .services import BankFileInfo, CheckFileLines, \
     EnrolleOperations
 from datetime import datetime
@@ -180,6 +180,10 @@ class BankViewset(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
 
+    def get_queryset(self):
+        self.request.user.banks.all()
+        # comp_users = Company.objects.get(user=self.request.user).users
+
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         if request.headers.get("HX-Request"):
@@ -213,6 +217,9 @@ class BankFileViewset(viewsets.ModelViewSet):
     lookup_field = 'pk'
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
+
+    def get_queryset(self):
+        pass
 
 
 class OperationViewset(viewsets.ModelViewSet):
