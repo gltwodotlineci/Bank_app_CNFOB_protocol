@@ -4,11 +4,12 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 
-from .models import Bank, Account, BankStatementFile, Operation, Company
-from .services import BankFileInfo, CheckFileLines, \
-    EnrolleOperations
+from .models import Bank, Account, BankStatementFile, Operation, Company, \
+    CompanyBank
+from .services import BankFileInfo, CheckFileLines, EnrolleOperations
 from datetime import datetime
-from bank.serializer import AccountSerializer, BankFileSerializer, BankSerializer, OperationSerializer
+from bank.serializer import AccountSerializer, BankFileSerializer, \
+    BankSerializer, OperationSerializer, CompanySerializer
 from django.contrib import messages
 from rest_framework.permissions import IsAuthenticated
 from .permissions import BankAccountPermission, FileOperationPermission
@@ -120,11 +121,12 @@ def bank(request):
     try:
         banks = Bank.objects.order_by('name')
         accounts = Account.objects.order_by('number')
+        companies = Company.objects.filter(users__in=[request.user])
     except Exception as e:
         print("No data or error serializer: ", e)
 
     return render(request, 'bank/list_banks.html',
-                  {'banks':banks, 'accounts':accounts})
+                  {'banks':banks, 'accounts':accounts, 'companies': companies})
 
 
 def bank_form(request):
@@ -171,6 +173,19 @@ def bank_details(request):
     })
 
 
+class CompanyViewset(viewsets.ModelViewSet):
+    """
+    Company Viewset for managing companies
+    """
+    permission_classes = [IsAuthenticated]
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+
+    lookup_field = 'pk'
+    http_method_names = ['get', 'post', 'patch', 'delete',
+                         'head', 'options']
+
+
 class BankViewset(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, BankAccountPermission]
     queryset = Bank.objects.all()
@@ -181,11 +196,30 @@ class BankViewset(viewsets.ModelViewSet):
                          'head', 'options']
 
     def get_queryset(self):
-        self.request.user.banks.all()
-        # comp_users = Company.objects.get(user=self.request.user).users
+        company = Company.objects.filter(users__in=[self.request.user])
+        if company:
+            return self.queryset.filter(
+                company_banks__company__in=company).distinct()
+        return Bank.objects.none()
 
     def create(self, request, *args, **kwargs):
+        company_id = request.data.get("company")
+        if not company_id:
+            return JsonResponse(
+                {"error": "company_id is required"},
+                status=400
+            )
+        if not Company.objects.filter(id=company_id, users__in=[request.user]).exists():
+            return JsonResponse(
+                {"error": "You are not associated with this company"},
+                status=403
+            )
+        company = Company.objects.get(id=company_id)
         response = super().create(request, *args, **kwargs)
+        CompanyBank.objects.create(company=company,
+                                   bank_id=response.data['id'],
+                                   swift=response.data['swift'])
+
         if request.headers.get("HX-Request"):
             return render(request, "bank/partials/success_bank.html")
 

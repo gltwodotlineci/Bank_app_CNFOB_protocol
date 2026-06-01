@@ -51,8 +51,8 @@ class Bank(models.Model):
                              on_delete=models.SET_NULL,
                              null=True,
                              related_name='bank')
-    name = models.CharField(max_length=60, unique=True)
-    code = models.CharField(max_length=5, unique=True)
+    name = models.CharField(max_length=60)
+    code = models.CharField(max_length=5)
     branch_code = models.CharField(max_length=5)
     rib_key = models.CharField(max_length=2)
     swift = models.CharField(max_length=12, verbose_name='SWIFT')

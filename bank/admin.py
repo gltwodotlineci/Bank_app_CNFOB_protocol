@@ -1,11 +1,17 @@
 from django.contrib import admin
 from .models import Bank, Account, BankStatementFile,\
-    Operation, NewBalanceAccount, Company
+    Operation, NewBalanceAccount, Company, CompanyBank
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('number', 'bank', "id")
 
 admin.site.register(Account, AccountAdmin)
+
+
+class CompanyBankAdmin(admin.ModelAdmin):
+    list_display = ('company', 'bank', "id")
+
+admin.site.register(CompanyBank, CompanyBankAdmin)
 
 admin.site.register(Company)
 admin.site.register(Bank)

@@ -8,43 +8,40 @@
 
         <div class="flex items-center gap-3 mb-8">
 
-<div class="relative">
+        <div class="relative">
 
-    <!-- BUTTON -->
-    <button id="banksDropdownBtn"
-            class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <!-- button -->
+            <button id="banksDropdownBtn"
+                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
 
-        Banks
-        <span id="dropdownArrow">▼</span>
+                Banks
+                <span id="dropdownArrow">▼</span>
 
-    </button>
+            </button>
 
-    <!-- DROPDOWN -->
-    <div id="banksDropdownMenu"
-         class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+            <!-- DropDown -->
+            <div id="banksDropdownMenu"
+                class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
 
-        <div class="px-4 py-3 text-gray-500">
-            Loading...
+                <div class="px-4 py-3 text-gray-500">
+                    Loading...
+                </div>
+
+            </div>
+
         </div>
-
-    </div>
-
-</div>
-
             <button id="btnBank"
                     class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                 New Bank
             </button>
-
             <button id="btnAccount"
                     class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
                 New Account
             </button>
-
         </div>
 
         <div id="bankForm" class="hidden">
-            {% include 'bank/partials/bank_form.html' %}
+            {% include 'bank/partials/bank_form.html' with banks=banks %}
         </div>
 
         <div id="accountForm" class="hidden">

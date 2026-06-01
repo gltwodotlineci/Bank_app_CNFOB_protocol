@@ -1,11 +1,13 @@
 from django.urls import path, include
 from . import views
-from bank.views import BankFileViewset, BankViewset, AccountViewset, OperationViewset
+from bank.views import BankFileViewset, BankViewset, AccountViewset, \
+    OperationViewset, CompanyViewset
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
 router = routers.DefaultRouter()
 router.register(r'bankfiles', BankFileViewset, basename='bankfiles')
+router.register(r'companies', CompanyViewset, basename='companies')
 router.register(r'banks', BankViewset, basename='banks')
 
 # Nested routes for accounts adn operations
