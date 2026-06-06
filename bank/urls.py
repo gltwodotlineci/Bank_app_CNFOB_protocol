@@ -27,6 +27,7 @@ urlpatterns = [
     path('check_file/', views.check_file, name='check_file'),
     path('charge_data/', views.charge_data, name='charge_data'),
     path('bank_form/', views.bank_form, name='bank_form'),
+    path('update_bank_form/<uuid:bank_id>/', views.update_bank_form, name='update_bank_form'),
     path('bank_preview/', views.bank_details, name='bank_preview'),
     path('account_form/', views.account_form, name='account_form'),
     path('chargefile/', views.charge_file, name='charge_file'),

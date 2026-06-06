@@ -40,6 +40,8 @@ def charge_file(request):
     We will load the files before we check and charge
     their data to the database
     """
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('home')
     type_files = ['csv', 'xlsx', 'txt', 'ods', 'QET']
 
     if request.method == "POST":
@@ -100,6 +102,8 @@ def charge_data(request):
     We will charge the file's checked data into
     Operations table
     """
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('home')
     file_id = None
     if request.method == "POST":
         file_id = request.POST.get("file_id")
@@ -116,7 +120,7 @@ def charge_data(request):
 
 def bank(request):
     if request.user.is_authenticated and request.user.role == "V":
-        return redirect('new_user')
+        return redirect('welcome')
     accounts, banks = None, None
     try:
         banks = Bank.objects.order_by('name')
@@ -130,10 +134,28 @@ def bank(request):
 
 
 def bank_form(request):
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('welcome')
     return render(request, 'bank/partials/bank_form.html')
 
 
+def update_bank_form(request, bank_id):
+    if bank_id is None:
+        return redirect('bank')
+    selected_bank = None
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('welcome')
+    if bank_id:
+        selected_bank = Bank.objects.get(id=bank_id)
+
+    return render(request, "bank/partials/update_bank.html", {
+        "bank": selected_bank})
+
+
 def account_form(request):
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('home')
+    accounts = None
     accounts = Account.objects.order_by('number')
     return render(request, 'bank/partials/account_form.html', {'accounts':accounts})
 
@@ -145,8 +167,8 @@ def accounts_statement(request):
 
 
 def importdocument(request):
-    if request.user.is_authenticated and request.user.role == "V":
-        return redirect('new_user')
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('welcome')
 
     if request.user.is_superuser or request.user.role == "A":
         queryset = BankStatementFile.objects.order_by('date_imported')
@@ -236,7 +258,7 @@ class AccountViewset(viewsets.ModelViewSet):
                          'head', 'options']
 
     def get_queryset(self):
-        return Account.objects.filter(
+        return self.queryset.filter(
             bank_id=self.kwargs["bank_pk"])
 
     def perform_create(self, serializer):

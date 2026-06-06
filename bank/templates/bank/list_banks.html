@@ -8,53 +8,66 @@
 
         <div class="flex items-center gap-3 mb-8">
 
-        <div class="relative">
+            <!-- BANK DROPDOWN -->
+            <div class="relative">
 
-            <!-- button -->
-            <button id="banksDropdownBtn"
-                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                <button id="banksDropdownBtn"
+                        class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    Banks
+                    <span id="dropdownArrow">▼</span>
+                </button>
 
-                Banks
-                <span id="dropdownArrow">▼</span>
+                <div id="banksDropdownMenu"
+                     class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
 
-            </button>
+                    <div class="px-4 py-3 text-gray-500">
+                        Loading...
+                    </div>
 
-            <!-- DropDown -->
-            <div id="banksDropdownMenu"
-                class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
-
-                <div class="px-4 py-3 text-gray-500">
-                    Loading...
                 </div>
 
             </div>
 
-        </div>
+            <!-- NEW BANK (will load empty form) -->
             <button id="btnBank"
                     class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                 New Bank
             </button>
+
             <button id="btnAccount"
                     class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
                 New Account
             </button>
+
         </div>
 
-        <div id="bankForm" class="hidden">
-            {% include 'bank/partials/bank_form.html' with banks=banks %}
-        </div>
+        <div class="w-full flex flex-col items-center">
 
-        <div id="accountForm" class="hidden">
-            {% include 'bank/partials/account_form.html' %}
-        </div>
+            <!-- New Bank Form -->
+            <div id="bankFormContainer" class="hidden w-full">
+                {% include 'bank/partials/bank_form.html' %}
+            </div>
+
+            <!-- Update Bank Form -->
+            <div id="updateBankForm" class="hidden w-full">
+                {% include 'bank/partials/update_bank.html' %}
+            </div>
+
+            <!-- Account Form -->
+            <div id="accountForm" class="hidden w-full">
+                {% include 'bank/partials/account_form.html' %}
+            </div>
+
+</div>
 
     </div>
+
 </div>
 
 <style>
-    .hidden {
-        display: none;
-    }
+.hidden {
+    display: none;
+}
 </style>
 
 {% endblock %}
