@@ -123,7 +123,9 @@ def bank(request):
         return redirect('welcome')
     accounts, banks = None, None
     try:
-        banks = Bank.objects.order_by('name')
+        banks = Bank.objects.filter(
+            company_banks__company__users__in=[request.user]
+        ).distinct().order_by('name')
         accounts = Account.objects.order_by('number')
         companies = Company.objects.filter(users__in=[request.user])
     except Exception as e:
@@ -173,13 +175,22 @@ def importdocument(request):
     if request.user.is_superuser or request.user.role == "A":
         queryset = BankStatementFile.objects.order_by('date_imported')
         serializer = BankFileSerializer(queryset, many=True)
-        banks = Bank.objects.all()
+        banks = Bank.objects.filter(company_banks__company__users__in=
+                                    [request.user]).distinct().order_by('name')
         try:
             return render(request, 'import_files/files.html', {'files':queryset, 'banks':banks})
         except Exception as e:
             print("No data or error serializer: ", e)
         return render(request, 'import_files/files.html', {})
     return redirect('home')
+
+
+def archived_files(request):
+    if not request.user.is_authenticated or request.user.role == "V":
+        return redirect('welcome')
+
+    archived = BankStatementFile.objects.filter(archived=True).order_by('date_imported')
+    return render(request, 'import_files/archived_files.html', {'files':archived})
 
 
 def bank_details(request):

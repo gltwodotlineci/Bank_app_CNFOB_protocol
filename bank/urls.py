@@ -33,4 +33,5 @@ urlpatterns = [
     path('chargefile/', views.charge_file, name='charge_file'),
     path('importdocuments/', views.importdocument, name='import'),
     path('statements/', views.accounts_statement, name='statements'),
+    path('archived/', views.archived_files, name='archived_files'),
 ]
