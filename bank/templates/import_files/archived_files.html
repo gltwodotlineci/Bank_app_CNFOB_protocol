@@ -1,6 +1,24 @@
+<table id="bankFile"
+    class="min-w-full bg-white border border-gray-200">
+
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="px-4 py-3 text-left">File Name</th>
+            <th class="px-4 py-3 text-left">Import Date</th>
+            <th class="px-4 py-3 text-left">Bank</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
 {% for file in files %}
-    <tr>
-        <td>{{ file.file_name }}</td>
-        <td>{{ file.date_imported }}</td>
-    </tr>
+<tr>
+    <td>{{ file.name }}</td>
+    <td>{{ file.date_imported }}</td>
+    <td>{{ file.bank }}</td>
+</tr>
 {% endfor %}
+
+    </tbody>
+
+</table>

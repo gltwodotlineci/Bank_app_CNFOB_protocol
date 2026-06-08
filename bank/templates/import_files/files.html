@@ -97,20 +97,32 @@
                                 No validated files
                              </li>
                         {% endfor %}
-
                     </ul>
                 </div>
             </div>            
         </div>
     </div>
-        <div class="row mt-4">
-            <div class="col-md-12 d-flex justify-content-center">
-                <button class="btn btn-dark btn-lg">
-                    Archived Files ⤵
-                </button>
-            </div>
+    <div class="row mt-4">
+
+        <div class="col-md-12 d-flex justify-content-center">
+
+            <button id="toggleArchivedFiles"
+                    type="button"
+                    class="btn btn-dark btn-lg">
+                Archived Files ⤵
+            </button>
+
         </div>
-        {% include 'import_files/archived_files.html' %}
+
+        <div id="archivedFilesContainer"
+            style="display:none;"
+            class="mt-3">
+
+            {% include 'import_files/archived_files.html' %}
+
+        </div>
+
+    </div>
 </div>
 
 <script>
@@ -239,6 +251,29 @@ async function chargeFile(fileId) {
     }
     showMessage("success", data.message || "File charged successfully");
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btn = document.getElementById("toggleArchivedFiles");
+    const container = document.getElementById("archivedFilesContainer");
+
+    if (!btn || !container) return;
+
+    btn.addEventListener("click", function () {
+
+        if (container.style.display === "none") {
+
+            container.style.display = "block";
+            btn.innerHTML = "Archived Files ⤴";
+
+        } else {
+
+            container.style.display = "none";
+            btn.innerHTML = "Archived Files ⤵";
+        }
+    });
+
+});
 
 </script>
 

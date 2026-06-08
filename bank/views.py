@@ -106,7 +106,8 @@ def charge_data(request):
         return redirect('home')
     file_id = None
     if request.method == "POST":
-        file_id = request.POST.get("file_id")
+        data = json.loads(request.body.decode("utf-8"))
+        file_id = data.get("file_id")
     if file_id is None:
         messages.error(request, "Wrong file selected")
         return redirect("/importdocuments/")
