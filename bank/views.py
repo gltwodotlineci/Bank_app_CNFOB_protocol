@@ -12,7 +12,8 @@ from bank.serializer import AccountSerializer, BankFileSerializer, \
     BankSerializer, OperationSerializer, CompanySerializer
 from django.contrib import messages
 from rest_framework.permissions import IsAuthenticated
-from .permissions import BankAccountPermission, FileOperationPermission
+from .permissions import BankAccountPermission, FileOperationPermission, \
+    CompanyPermission
 
 today = datetime.today()
 
@@ -211,7 +212,7 @@ class CompanyViewset(viewsets.ModelViewSet):
     """
     Company Viewset for managing companies
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, CompanyPermission]
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
 
