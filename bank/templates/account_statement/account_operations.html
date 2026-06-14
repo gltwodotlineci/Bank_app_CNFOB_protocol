@@ -1,10 +1,13 @@
 {% extends 'origin/base.html' %}
 
 {% block content %}
-
-<div id="react-root"></div>
 {% load static %}
 
-<script type="module" src="{% static 'frontend_react/dist/assets/index-CA1UUcnE.js' %}"></script>
+<div id="react-root"></div>
+<script>
+    window.REACT_PAGE = "operations";
+</script>
+
+<script type="module" src="{% static 'frontend_react/dist/assets/' %}{{ index_name }}.js"></script>
 
 {% endblock %}

@@ -35,6 +35,7 @@ class BankAccountPermission(BasePermission):
     def has_permission(self, request, view) -> bool:
         user = request.user
         if not user.is_authenticated:
+            print("Not authenticated")
             return False
         if request.method == "POST":
             return user.role in [UserRole.ADMIN, UserRole.MANAGER, UserRole.STAFF]
@@ -62,6 +63,7 @@ class FileOperationPermission(BasePermission):
     def has_permission(self, request, view) -> bool:
         user = request.user
         if not user.is_authenticated:
+            import ipdb; ipdb.set_trace()
             return False
         if request.method == "POST":
             return user.role in [UserRole.ADMIN, UserRole.STAFF]

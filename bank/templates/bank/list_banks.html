@@ -1,73 +1,15 @@
 {% extends 'origin/base.html' %}
 
 {% block content %}
+{% load static %}
+<div id="react-root"></div>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+<script>
+  window.REACT_PAGE = "bank";    
+  window.COMPANIES = JSON.parse('{{ companies|escapejs }}');
+  window.BANKS = JSON.parse('{{ banks|escapejs }}');
+</script>
 
-    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
-
-        <div class="flex items-center gap-3 mb-8">
-
-            <!-- BANK DROPDOWN -->
-            <div class="relative">
-
-                <button id="banksDropdownBtn"
-                        class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Banks
-                    <span id="dropdownArrow">▼</span>
-                </button>
-
-                <div id="banksDropdownMenu"
-                     class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
-
-                    <div class="px-4 py-3 text-gray-500">
-                        Loading...
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- NEW BANK (will load empty form) -->
-            <button id="btnBank"
-                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                New Bank
-            </button>
-
-            <button id="btnAccount"
-                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-                New Account
-            </button>
-
-        </div>
-
-        <div class="w-full flex flex-col items-center">
-
-            <!-- New Bank Form -->
-            <div id="bankFormContainer" class="hidden w-full">
-                {% include 'bank/partials/bank_form.html' %}
-            </div>
-
-            <!-- Update Bank Form -->
-            <div id="updateBankForm" class="hidden w-full">
-                {% include 'bank/partials/update_bank.html' %}
-            </div>
-
-            <!-- Account Form -->
-            <div id="accountForm" class="hidden w-full">
-                {% include 'bank/partials/account_form.html' %}
-            </div>
-
-</div>
-
-    </div>
-
-</div>
-
-<style>
-.hidden {
-    display: none;
-}
-</style>
+<script type="module" src="{% static 'frontend_react/dist/assets/' %}{{ index_name }}.js"></script>
 
 {% endblock %}

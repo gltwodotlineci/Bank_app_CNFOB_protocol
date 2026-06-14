@@ -1,13 +1,15 @@
 import json
-
+from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.core.serializers.json import DjangoJSONEncoder
 from rest_framework import viewsets
-
+from django.core.serializers import serialize
 from .models import Bank, Account, BankStatementFile, Operation, Company, \
-    CompanyBank
+    CompanyBank, AppConfig
 from .services import BankFileInfo, CheckFileLines, EnrolleOperations
 from datetime import datetime
+from django.db import transaction
 from bank.serializer import AccountSerializer, BankFileSerializer, \
     BankSerializer, OperationSerializer, CompanySerializer
 from django.contrib import messages
@@ -123,24 +125,16 @@ def charge_data(request):
 def bank(request):
     if request.user.is_authenticated and request.user.role == "V":
         return redirect('welcome')
-    accounts, banks = None, None
-    try:
-        banks = Bank.objects.filter(
-            company_banks__company__users__in=[request.user]
-        ).distinct().order_by('name')
-        accounts = Account.objects.order_by('number')
-        companies = Company.objects.filter(users__in=[request.user])
-    except Exception as e:
-        print("No data or error serializer: ", e)
-
+    companies = Company.objects.filter(users__in=[request.user]).distinct()
+    data = [{"id": str(c.id), "name": c.name} for c in companies]
+    index_name = AppConfig.objects.first().react_bundle_name if \
+        AppConfig.objects.first() else ""
+    banks = Bank.objects.filter(company_banks__company__in=companies).distinct()
+    data2 = [{"id": str(b.id), "name": b.name} for b in banks]
     return render(request, 'bank/list_banks.html',
-                  {'banks':banks, 'accounts':accounts, 'companies': companies})
-
-
-def bank_form(request):
-    if not request.user.is_authenticated or request.user.role == "V":
-        return redirect('welcome')
-    return render(request, 'bank/partials/bank_form.html')
+                  {'index_name': index_name,
+                   'companies': json.dumps(data),
+                   'banks': json.dumps(data2)})
 
 
 def update_bank_form(request, bank_id):
@@ -156,18 +150,13 @@ def update_bank_form(request, bank_id):
         "bank": selected_bank})
 
 
-def account_form(request):
-    if not request.user.is_authenticated or request.user.role == "V":
-        return redirect('home')
-    accounts = None
-    accounts = Account.objects.order_by('number')
-    return render(request, 'bank/partials/account_form.html', {'accounts':accounts})
-
-
 def accounts_statement(request):
     if request.user.is_authenticated and request.user.role == "V":
         return redirect('new_user')
-    return render(request, 'account_statement/account_operations.html')
+    index_name = AppConfig.objects.first().react_bundle_name if \
+        AppConfig.objects.first() else ""
+    return render(request, 'account_statement/account_operations.html',
+                  {'index_name': index_name})
 
 
 def importdocument(request):
@@ -238,27 +227,34 @@ class BankViewset(viewsets.ModelViewSet):
         return Bank.objects.none()
 
     def create(self, request, *args, **kwargs):
-        company_id = request.data.get("company")
+        company_id = self.request.data.get("company")
         if not company_id:
             return JsonResponse(
                 {"error": "company_id is required"},
                 status=400
             )
-        if not Company.objects.filter(id=company_id, users__in=[request.user]).exists():
+        if not Company.objects.filter(id=company_id,
+                                      users__in=[
+                                          self.request.user]).exists():
             return JsonResponse(
                 {"error": "You are not associated with this company"},
                 status=403
             )
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
         company = Company.objects.get(id=company_id)
-        response = super().create(request, *args, **kwargs)
-        CompanyBank.objects.create(company=company,
-                                   bank_id=response.data['id'],
-                                   swift=response.data['swift'])
-
-        if request.headers.get("HX-Request"):
-            return render(request, "bank/partials/success_bank.html")
-
-        return response
+        try:
+            with transaction.atomic():
+                bank = serializer.save()
+                CompanyBank.objects.create(company=company, bank=bank,
+                                        swift=bank.swift)
+            return Response({"message": "Bank created successfully"},
+                            status=201)
+        except Exception as e:
+            return JsonResponse(
+                {"error": str(e)},
+                status=400
+            )
 
 
 class AccountViewset(viewsets.ModelViewSet):

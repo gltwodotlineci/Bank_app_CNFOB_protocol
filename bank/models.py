@@ -1,9 +1,44 @@
 from datetime import datetime
-
+from solo.models import SingletonModel
 from django.db import models
 from uuid import uuid4
 from bank_CFNOB_norm import settings
 from users.models import CustomUser
+
+
+class AppConfig(SingletonModel):
+    TZ_REUNION = "Indian/Reunion"
+    TZ_PARIS = "Europe/Paris"
+
+    TZ_CHOICES = [
+        (TZ_REUNION, "Indian/Reunion"),
+        (TZ_PARIS, "Europe/Paris"),
+    ]
+
+    timezone = models.CharField(
+        max_length=50,
+        choices=TZ_CHOICES,
+        default=TZ_REUNION,
+    )
+
+    react_bundle_name = models.CharField(
+        max_length=100,
+        default="index"
+    )
+
+    stripe_api_key = models.CharField(
+        max_length=110,
+        blank=True,
+        null=True
+    )
+
+    stripe_test_api_key = models.CharField(
+        max_length=110,
+        blank=True,
+        null=True
+    )
+
+    stripe_mode_test = models.BooleanField(default=True)
 
 
 class Company(models.Model):
@@ -28,9 +63,9 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     company_code = models.CharField(max_length=100)
     company_address = models.CharField(max_length=100)
-    company_email = models.EmailField()
+    company_email = models.EmailField(max_length=254)
     company_phone = models.CharField(max_length=100)
-    company_website = models.CharField(max_length=100)
+    company_website = models.CharField(max_length=100, null=True, blank=True)
     company_logo = models.ImageField(upload_to='company_logos/')
 
 
@@ -83,7 +118,12 @@ class CompanyBank(models.Model):
     swift = models.CharField(max_length=12, verbose_name='SWIFT')
 
     class Meta:
-        unique_together = ('company', 'bank', 'swift')
+        constraints = [
+            models.UniqueConstraint(
+                fields=["company", "swift"],
+                name="unique_company_swift"
+            )
+        ]
 
 
 class Currency(models.TextChoices):
@@ -163,26 +203,3 @@ class Operation(models.Model):
     pointer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                 null=True, blank=True)
     date_pointed = models.DateTimeField(null=True, blank=True)
-
-
-class NewBalanceAccount(models.Model):
-    """
-    New Balance Account Model for the bank data
-    Attributes:
-        id: Unique id for the new balance account
-        enrolling_nb: Enrolling number
-        bank_code: Bank code
-        account_number: Account number
-        new_balance_date: New balance date
-        new_balance: New balance
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    enrolling_nb = models.CharField(max_length=3)
-    bank_code = models.CharField(max_length=7)
-    account_number = models.CharField(max_length=15)
-    new_balance_date = models.DateTimeField()
-    amount_credit = models.DecimalField(max_digits=12, decimal_places=2)
-    amount_debit = models.DecimalField(max_digits=12, decimal_places=2)
-
-    def __str__(self):
-        return self.enrolling_nb
