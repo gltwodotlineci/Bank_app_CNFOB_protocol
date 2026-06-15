@@ -1,5 +1,5 @@
 import factory
-from bank.models import Company
+from bank.models import Company, Bank
 
 
 class CompanyFactory(factory.django.DjangoModelFactory):
@@ -14,8 +14,6 @@ class CompanyFactory(factory.django.DjangoModelFactory):
     company_address = factory.Faker('address')
     company_email = factory.Faker('email')
     company_phone = factory.Faker('phone_number')
-    company_website = factory.Faker('url')
-    company_logo = factory.django.ImageField(color='blue')
 
     @factory.post_generation
     def users(self, create, extracted, **kwargs):
@@ -24,3 +22,22 @@ class CompanyFactory(factory.django.DjangoModelFactory):
         if extracted:
             for user in extracted:
                 self.users.add(user)
+
+
+class BankFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for creating CustomUser instances for testing.
+    """
+    class Meta:
+        model = Bank
+
+    name = factory.Faker('name')
+    code = factory.Faker('text', max_nb_chars=8)
+    branch_code = factory.Faker('text', max_nb_chars=6)
+    rib_key = factory.Faker('text', max_nb_chars=2)
+    swift = factory.Faker('text', max_nb_chars=19)
+    address = factory.Faker('address')
+    email = factory.Faker('email')
+    phone = factory.Faker('phone_number')
+    holder_name = factory.Faker('name')
+    country_key = factory.Faker('text', max_nb_chars=4)
