@@ -1,139 +1,172 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    const btnBank = document.getElementById("btnBank");
-    const btnAccount = document.getElementById("btnAccount");
-
-    const bankForm = document.getElementById("bankForm");
-    const accountForm = document.getElementById("accountForm");
-
-    function hideAll() {
-        if (bankForm) bankForm.classList.add("hidden");
-        if (accountForm) accountForm.classList.add("hidden");
-    }
-
-    function openBankForm() {
-        hideAll();
-        if (bankForm) bankForm.classList.remove("hidden");
-    }
-
-    function openAccountForm() {
-        hideAll();
-        if (accountForm) accountForm.classList.remove("hidden");
-    }
-
-    if (btnBank) {
-        btnBank.addEventListener("click", openBankForm);
-    }
-
-    if (btnAccount) {
-        btnAccount.addEventListener("click", openAccountForm);
-    }
-
-    window.openBankForm = openBankForm;
-    window.openAccountForm = openAccountForm;
-});
-
-
-// dorp down
-
-document.addEventListener("DOMContentLoaded", function () {
-
     const dropdownBtn = document.getElementById("banksDropdownBtn");
     const dropdownMenu = document.getElementById("banksDropdownMenu");
     const arrow = document.getElementById("dropdownArrow");
 
+    const btnBank = document.getElementById("btnBank");
+    const btnAccount = document.getElementById("btnAccount");
+
+    const bankContainer = document.getElementById("bankFormContainer");
+    const accountForm = document.getElementById("accountForm");
+
     let loaded = false;
 
-    if (!dropdownBtn || !dropdownMenu) return;
+    function hideAll() {
 
-    dropdownBtn.addEventListener("click", async () => {
-
-        dropdownMenu.classList.toggle("hidden");
-
-        if (arrow) {
-            arrow.textContent = dropdownMenu.classList.contains("hidden") ? "▼" : "▲";
+        if (bankContainer) {
+            bankContainer.classList.add("hidden");
         }
 
-        if (loaded) return;
+        if (accountForm) {
+            accountForm.classList.add("hidden");
+        }
+    }
 
-        try {
+    function showBankContainer() {
 
-            const response = await fetch("/api/banks/");
-            const banks = await response.json();
+        hideAll();
 
-            dropdownMenu.innerHTML = "";
+        if (bankContainer) {
+            bankContainer.classList.remove("hidden");
+        }
+    }
 
-            if (!banks.length) {
-                dropdownMenu.innerHTML = `
-                    <div class="px-4 py-3 text-gray-500">
-                        No banks found
-                    </div>
-                `;
-                return;
+    function showAccountForm() {
+
+        hideAll();
+
+        if (accountForm) {
+            accountForm.classList.remove("hidden");
+        }
+    }
+
+    // ==========================
+    // NEW BANK
+    // ==========================
+
+    if (btnBank) {
+
+        btnBank.addEventListener("click", async function () {
+
+            try {
+
+                const response = await fetch("/bank_form/");
+
+                bankContainer.innerHTML = await response.text();
+
+                showBankContainer();
+
+            } catch (error) {
+
+                console.error(error);
+            }
+        });
+    }
+
+    // ==========================
+    // NEW ACCOUNT
+    // ==========================
+
+    if (btnAccount) {
+
+        btnAccount.addEventListener("click", function () {
+
+            showAccountForm();
+        });
+    }
+
+    // ==========================
+    // BANKS DROPDOWN
+    // ==========================
+
+    if (dropdownBtn && dropdownMenu) {
+
+        dropdownBtn.addEventListener("click", async () => {
+
+            dropdownMenu.classList.toggle("hidden");
+
+            if (arrow) {
+
+                arrow.textContent =
+                    dropdownMenu.classList.contains("hidden")
+                        ? "▼"
+                        : "▲";
             }
 
-            banks.forEach(bank => {
+            if (loaded) return;
 
-                const item = document.createElement("button");
+            try {
 
-                item.className =
-                    "block w-full text-left px-4 py-3 hover:bg-gray-100 transition";
+                const response = await fetch("/api/banks/");
+                const banks = await response.json();
 
-                item.textContent = bank.bank_name || bank.name || "Unnamed Bank";
+                dropdownMenu.innerHTML = "";
 
-                item.addEventListener("click", () => {
+                if (!banks.length) {
 
-                    console.log("Selected bank:", bank);
+                    dropdownMenu.innerHTML = `
+                        <div class="px-4 py-3 text-gray-500">
+                            No banks found
+                        </div>
+                    `;
 
-                    fillBankForm(bank);
+                    return;
+                }
 
-                    dropdownMenu.classList.add("hidden");
-                    if (arrow) arrow.textContent = "▼";
+                banks.forEach(bank => {
 
-                    if (window.openBankForm) {
-                        window.openBankForm();
-                    }
+                    const item = document.createElement("button");
 
+                    item.type = "button";
+
+                    item.className =
+                        "block w-full text-left px-4 py-3 hover:bg-gray-100 transition";
+
+                    item.textContent =
+                        bank.bank_name || bank.name || "Unnamed Bank";
+
+                    item.addEventListener("click", async () => {
+
+                        try {
+
+                            const response = await fetch(
+                                `/update_bank_form/${bank.id}/`
+                            );
+
+                            bankContainer.innerHTML =
+                                await response.text();
+
+                            showBankContainer();
+
+                            dropdownMenu.classList.add("hidden");
+
+                            if (arrow) {
+                                arrow.textContent = "▼";
+                            }
+
+                        } catch (error) {
+
+                            console.error(error);
+                        }
+                    });
+
+                    dropdownMenu.appendChild(item);
                 });
 
-                dropdownMenu.appendChild(item);
-            });
+                loaded = true;
 
-            loaded = true;
+            } catch (error) {
 
-        } catch (error) {
+                console.error(error);
 
-            console.error(error);
+                dropdownMenu.innerHTML = `
+                    <div class="px-4 py-3 text-red-500">
+                        Error loading banks
+                    </div>
+                `;
+            }
+        });
+    }
 
-            dropdownMenu.innerHTML = `
-                <div class="px-4 py-3 text-red-500">
-                    Error loading banks
-                </div>
-            `;
-        }
-
-    });
 });
-
-
-// Filling Form
-
-function fillBankForm(bank) {
-
-    const set = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.value = value || "";
-    };
-
-    set("name", bank?.bank_name || bank?.name);
-    set("bank_code", bank?.bank_code || bank?.code);
-    set("bic", bank?.bic);
-    set("rib", bank?.rib);
-    set("branch_code", bank?.branch_code);
-    set("account_holder", bank?.holder_name);
-    set("address", bank?.adresse);
-    set("email", bank?.email);
-    set("phone", bank?.phone);
-    set("zip_code", bank?.zip_code);
-
-}

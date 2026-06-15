@@ -1,9 +1,8 @@
 import factory
 from users.models import CustomUser, UserRole
-from user_authent.tests.factory_models.models import UserFactory
 
 
-class CustomUserFactory(UserFactory):
+class CustomUserFactory(factory.django.DjangoModelFactory):
     """
     Factory for creating CustomUser instances for testing.
     """
@@ -13,4 +12,4 @@ class CustomUserFactory(UserFactory):
     role = UserRole.STAFF
     username = factory.Faker('name')
     email = factory.Faker('email')
-    active = True
+    password = factory.Faker('text')

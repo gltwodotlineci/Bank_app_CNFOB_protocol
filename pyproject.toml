@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "django>=6.0.5",
     "django-extensions>=4.1",
+    "django-solo>=2.5.1",
     "django-stdimage>=6.0.2",
     "djangorestframework>=3.17.1",
     "djangorestframework-simplejwt>=5.5.1",
