@@ -1,5 +1,6 @@
 import factory
-from bank.models import Company, Bank, CompanyBank
+import Decimal
+from bank.models import Company, Bank, CompanyBank, Account
 from users.tests.factory_models.models import CustomUserFactory
 
 
@@ -55,3 +56,16 @@ class CompanyBankFactory(factory.django.DjangoModelFactory):
     company = factory.SubFactory(CompanyFactory)
     bank = factory.SubFactory(BankFactory)
     swift = factory.Faker('text', max_nb_chars=24)
+
+class AccountFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for creating Account instances for testing.
+    """
+    class Meta:
+        model = Account
+
+    number = factory.Faker('text', max_nb_chars=24)
+    bank = factory.SubFactory(BankFactory)
+    amount = factory.Faker('text', max_nb_chars=24)
+    currency = Decimal("100.50")
+    active = True
