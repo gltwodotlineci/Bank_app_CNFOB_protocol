@@ -7,12 +7,12 @@ from bank.tests.factory_models.models import CompanyFactory
 def make_login(self, username, password):
     return self.client.post('/api/login/', {'username': username, 'password': password})
 
+
 class UserTestCase(TestCase):
     def setUp(self):
         self.user_admin = CustomUserFactory.create(
             role=UserRole.ADMIN,
             username='admin_user',
-            password='admin1234',
             email='admin@gmail.com'
         )
         self.user_admin.set_password('admin1234')
@@ -20,7 +20,6 @@ class UserTestCase(TestCase):
         self.user = CustomUserFactory.create(
             role=UserRole.VISITOR,
             username='user',
-            password='user1234',
             email='user@gmail.com'
         )
         self.user.set_password('user1234')

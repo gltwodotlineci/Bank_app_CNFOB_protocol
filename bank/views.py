@@ -221,6 +221,7 @@ class BankViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         company = Company.objects.filter(users__in=[self.request.user])
+
         if company:
             return self.queryset.filter(
                 company_banks__company__in=company).distinct()

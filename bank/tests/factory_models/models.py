@@ -1,5 +1,6 @@
 import factory
-from bank.models import Company, Bank
+from bank.models import Company, Bank, CompanyBank
+from users.tests.factory_models.models import CustomUserFactory
 
 
 class CompanyFactory(factory.django.DjangoModelFactory):
@@ -32,12 +33,25 @@ class BankFactory(factory.django.DjangoModelFactory):
         model = Bank
 
     name = factory.Faker('name')
+    user = factory.SubFactory(CustomUserFactory)
     code = factory.Faker('text', max_nb_chars=8)
     branch_code = factory.Faker('text', max_nb_chars=6)
     rib_key = factory.Faker('text', max_nb_chars=2)
     swift = factory.Faker('text', max_nb_chars=19)
-    address = factory.Faker('address')
+    adresse = factory.Faker('address')
     email = factory.Faker('email')
     phone = factory.Faker('phone_number')
     holder_name = factory.Faker('name')
     country_key = factory.Faker('text', max_nb_chars=4)
+
+
+class CompanyBankFactory(factory.django.DjangoModelFactory):
+    """
+    Factory for creating CompanyBank instances for testing.
+    """
+    class Meta:
+        model = CompanyBank
+
+    company = factory.SubFactory(CompanyFactory)
+    bank = factory.SubFactory(BankFactory)
+    swift = factory.Faker('text', max_nb_chars=24)
