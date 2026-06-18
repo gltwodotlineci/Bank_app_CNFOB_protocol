@@ -1,8 +1,7 @@
 import factory
-import Decimal
+from decimal import Decimal
 from bank.models import Company, Bank, CompanyBank, Account
 from users.tests.factory_models.models import CustomUserFactory
-
 
 class CompanyFactory(factory.django.DjangoModelFactory):
     """
@@ -66,6 +65,5 @@ class AccountFactory(factory.django.DjangoModelFactory):
 
     number = factory.Faker('text', max_nb_chars=24)
     bank = factory.SubFactory(BankFactory)
-    amount = factory.Faker('text', max_nb_chars=24)
-    currency = Decimal("100.50")
+    amount = Decimal("100.50")
     active = True

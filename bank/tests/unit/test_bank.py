@@ -109,12 +109,9 @@ class BankTestCase(TestCase):
         for dt in case:
             usr, pwd, email, url, status = dt
 
-        make_login(self, usr, pwd)
-
-
-        res = self.client.patch(f'/api/banks/{url}/',
-                              {"holder_name": "new_name",
-                               "email": email},
-                               content_type='application/json')
-
-        assert res.status_code == status
+            make_login(self, usr, pwd)
+            res = self.client.patch(f'/api/banks/{url}/',
+                                {"holder_name": "new_name",
+                                "email": email},
+                                content_type='application/json')
+            assert res.status_code == status
