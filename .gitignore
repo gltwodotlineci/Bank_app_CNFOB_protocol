@@ -19,3 +19,6 @@ db.sqlite3
 *.pyc
 *.jpg
 *.jpeg
+*.png
+bank_CFNOB_norm/__pycache__/*
+users/__pycache__/*
