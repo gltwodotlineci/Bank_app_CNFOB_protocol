@@ -1,4 +1,4 @@
-# name: CI/CD for Preprod
+name: CI/CD for Preprod
 
 on:
   push:
