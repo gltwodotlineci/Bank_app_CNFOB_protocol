@@ -9,26 +9,42 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os.path
 from pathlib import Path
 import os
+import os.path
+from dotenv import load_dotenv
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load variables from .env file
+load_dotenv()
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+# For docker in local:
+# ENVIRONMENT = os.getenv("ENVIRONMENT", default="production")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o5e7*mh%0nwjle6kckhxqp5m*9u-0+v)7&^)w254)*w@ukr**#'
+ENVIRONMENT = os.getenv("ENVIRONMENT", default="local")
+CORS_URL = os.getenv("CORS_URL", default="http://localhost:5173")
+# redis in local for celery+cache
+REDIS_URL = 'redis://127.0.0.1:6379/'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+if ENVIRONMENT == "production":
+    # For docker in local:
+    # SECRET_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
+    # SIGNING_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
+    SECRET_KEY = os.getenv("SECRET_KEY")
+
+else:
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = 'django-insecure-o5e7*mh%0nwjle6kckhxqp5m*9u-0+v)7&^)w254)*w@ukr**#'
+    SIGNING_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
+
+    DEBUG = True
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
