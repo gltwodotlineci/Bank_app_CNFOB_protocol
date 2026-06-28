@@ -52,7 +52,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: glenllaci/bank_CFNOB_norm:latest
+          tags: glenllaci/bank_cfnob_norm:latest
 
       - name: Trigger deployment on Render.com
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
