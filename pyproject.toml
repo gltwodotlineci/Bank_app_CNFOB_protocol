@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "celery>=5.6.3",
     "django>=6.0.5",
     "django-extensions>=4.1",
     "django-solo>=2.5.1",
@@ -19,5 +20,6 @@ dependencies = [
     "htmx>=0.0.0",
     "ipdb>=0.13.13",
     "pytest>=9.0.3",
+    "redis>=8.0.1",
     "whitenoise>=6.12.0",
 ]
