@@ -36,6 +36,9 @@ if ENVIRONMENT == "production":
     # SIGNING_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
     SECRET_KEY = os.getenv("SECRET_KEY")
     SIGNING_KEY = os.getenv("SIGNING_KEY")
+    ALLOWED_HOSTS = [
+        "bank-cfnob-norm.onrender.com",
+    ]
 else:
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'django-insecure-o5e7*mh%0nwjle6kckhxqp5m*9u-0+v)7&^)w254)*w@ukr**#'
