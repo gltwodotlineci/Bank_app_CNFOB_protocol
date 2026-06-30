@@ -38,6 +38,10 @@ if ENVIRONMENT == "production":
     ALLOWED_HOSTS = [
         "bank-cfnob-norm.onrender.com",
     ]
+    # Celery configuration
+    REDIS_URL = 'redis://redis:6379/'
+    CELERY_BROKER_URL = REDIS_URL+'0'
+    CELERY_RESULT_BACKEND = REDIS_URL+'1'
 else:
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = 'django-insecure-o5e7*mh%0nwjle6kckhxqp5m*9u-0+v)7&^)w254)*w@ukr**#'
@@ -45,6 +49,9 @@ else:
 
     DEBUG = True
     ALLOWED_HOSTS = ["*"]
+    # Celery configuration
+    CELERY_BROKER_URL = REDIS_URL+'0'
+    CELERY_RESULT_BACKEND = REDIS_URL+'1'
 
 # Application definition
 INSTALLED_APPS = [

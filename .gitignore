@@ -11,12 +11,9 @@ wheels/
 .venv
 .env
 .python-version
-*.txt
 *.log
-*.csv
 *.ods
 *.pyc
-*.jpg
 *.jpeg
 *.png
 bank_CFNOB_norm/__pycache__/*

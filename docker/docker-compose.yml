@@ -10,3 +10,31 @@ services:
     volumes:
       - ../:/app
     command: uv run python manage.py runserver 0.0.0.0:8000
+
+  celery_worker:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+
+    command: uv run celery -A bank_CFNOB_norm worker -l info
+
+    volumes:
+      - ../:/app
+
+    depends_on:
+      - redis
+
+  celery_beat:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+
+    command: uv run celery -A bank_CFNOB_norm beat -l info
+
+    volumes:
+      - ../:/app
+
+    depends_on:
+      - redis
+  redis:
+    image: redis:7

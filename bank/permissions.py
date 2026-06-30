@@ -63,7 +63,6 @@ class FileOperationPermission(BasePermission):
     def has_permission(self, request, view) -> bool:
         user = request.user
         if not user.is_authenticated:
-            import ipdb; ipdb.set_trace()
             return False
         if request.method == "POST":
             return user.role in [UserRole.ADMIN, UserRole.STAFF]

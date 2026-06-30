@@ -1,0 +1,59 @@
+company:
+1.
+195468734
+Victoire@mail.fr
++3315698743
+2.
+915769867398155
+9 Place Goutenberg
+fcs@yahoo.fr
++33612324554
+super, glen2, basic
+
+
+Bank
+1.
+Bred
+Code: 15506
+branch code: 
+Rib key: 61
+BREDFRPPXXX
+Mara Astel
+1 Av Jea Jauresse
+97400
+FR
++262262339892
+bred@mail.fr
+
+2.
+Bred
+Code: 15506
+branch code: 1005
+Rib Key: 61
+BREDFRPPXXX
+George The SEcond
+1 Av Jea Jauresse
+97400
+FR
++262262339892
+bred@mail.fr
+
+3.
+BNP Paribas Réunion
+Code: 18706
+branch code: 0002
+Rib key: 45
+AGRIRERXXXX
+Pierre Noter
+4 Rue de la Source
+97400
++262262549876
+st-d-ag@bnp.re
+
+ACCounts:
+BRED: 74261839514 (F&Ch)     58394172608
+BNP: 48291756301    87056319428     39481620577
+
+
+glen1 Admin, glen2 Admin, test manager, basic staff, superadmin
+

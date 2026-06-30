@@ -1,9 +1,9 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete
 from django.dispatch import receiver
 # from .tasks import delete_file
 
 
-@receiver(post_save, sender= 'bank.BankStatementFile')
+@receiver(post_delete, sender= 'bank.BankStatementFile')
 def delete_file(sender, instance, **kwargs):
     """
     Delete file from storage

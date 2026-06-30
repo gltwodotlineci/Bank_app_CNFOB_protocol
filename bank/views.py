@@ -284,9 +284,6 @@ class BankFileViewset(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete',
                          'head', 'options']
 
-    def get_queryset(self):
-        pass
-
 
 class OperationViewset(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, FileOperationPermission]
