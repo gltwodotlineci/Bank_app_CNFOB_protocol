@@ -36,6 +36,9 @@ if ENVIRONMENT == "production":
     ALLOWED_HOSTS = [
         "bank-cfnob-norm.onrender.com",
     ]
+    CSRF_TRUSTED_ORIGINS = [
+        "https://bank-cfnob-norm.onrender.com",
+    ]
     # Celery configuration
     REDIS_URL = 'redis://redis:6379/'
     CELERY_BROKER_URL = REDIS_URL+'0'
