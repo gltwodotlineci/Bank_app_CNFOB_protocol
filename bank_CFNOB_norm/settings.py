@@ -30,9 +30,7 @@ REDIS_URL = 'redis://127.0.0.1:6379/'
 
 
 if ENVIRONMENT == "production":
-    # For docker in local:
-    # SECRET_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
-    # SIGNING_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
+    DEBUG = False
     SECRET_KEY = os.getenv("SECRET_KEY")
     SIGNING_KEY = os.getenv("SIGNING_KEY")
     ALLOWED_HOSTS = [
