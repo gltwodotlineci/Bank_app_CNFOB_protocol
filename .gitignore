@@ -3,6 +3,8 @@ __pycache__/
 *.py[oc]
 build/
 dist/
+!static/frontend_react/dist/
+!static/frontend_react/dist/**
 wheels/
 *.egg-info
 /staticfiles
